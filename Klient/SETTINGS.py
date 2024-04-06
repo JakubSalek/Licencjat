@@ -1,0 +1,16 @@
+import pygame
+
+# Server IP
+HOST = "127.0.0.1"
+PORT = 12345
+
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GRAY = (128, 128, 128)
+
+# Pygame settings and constants
+SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
+WINDOW_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
+FPS = 60
+TEXT_COLOR = BLACK
