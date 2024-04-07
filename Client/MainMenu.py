@@ -1,43 +1,15 @@
 import pygame as pg
 import sys
 from SettingsMenu import settings_menu
+from HowToMenu import how_to_menu
 import SETTINGS as S
-
-# Klasy przycisków
-class Button:
-    def __init__(self, x, y, width, height, text, font, normal_color, hover_color, action=None):
-        self.rect = pg.Rect(x, y, width, height)
-        self.text = text
-        self.font = font
-        self.normal_color = normal_color
-        self.hover_color = hover_color
-        self.action = action
-        self.hovered = False
-
-    def draw(self, surface):
-        color = self.hover_color if self.hovered else self.normal_color
-        pg.draw.rect(surface, color, self.rect)
-        text_surface = self.font.render(self.text, True, S.BLACK)
-        text_rect = text_surface.get_rect(center=self.rect.center)
-        surface.blit(text_surface, text_rect)
-
-    def check_hover(self, pos):
-        self.hovered = self.rect.collidepoint(pos)
-
-def draw_text(surface, text, color, x, y, font, center: bool):
-    text_surface = font.render(text, True, color)
-    text_rect = text_surface.get_rect()
-    if center:
-        text_rect.center = (x, y)
-    else:
-        text_rect.topleft = (x, y)
-    surface.blit(text_surface, text_rect)
+from UIComponents import Button, draw_text
 
 # Funkcja wyświetlająca menu główne
 def main_menu(screen, clock, client):
     # Czcionki
-    text_font = pg.font.Font(None, 36)
-    title_font = pg.font.Font(None, 94)
+    text_font = pg.font.Font(S.FONT, 36)
+    title_font = pg.font.Font(S.FONT, 94)
 
     # Zmienne do przycisków
     buttons_width = S.SCREEN_WIDTH/2
@@ -53,18 +25,19 @@ def main_menu(screen, clock, client):
     quit_button = Button(first_pos_x, first_pos_y + buttons_padding * 3, buttons_width, buttons_height, "Quit", text_font, S.GRAY, S.WHITE)
 
     # Zmienne do pola na wpisywanie
+    ibox_font = pg.font.Font(None, 28)
+    text_font = pg.font.Font(None, 32)
     ibox_x = S.SCREEN_WIDTH * 3 / 5
     ibox_y = S.SCREEN_HEIGHT * 11 / 12
     ibox_width = S.SCREEN_WIDTH * 2 / 5 - 10
-    ibox_height =  S.SCREEN_HEIGHT / 13 - 15
+    ibox_height = ibox_font.size("j")[1] * 1.5
     ibox = pg.Rect(ibox_x, ibox_y, ibox_width, ibox_height)
     ibox_color_inactive = pg.Color('lightskyblue3')
     ibox_color_active = pg.Color('dodgerblue2')
+    ibox_color_failure = pg.Color(255, 0, 0)
     ibox_color = ibox_color_inactive
     ibox_active = False
     ibox_text = ''
-    ibox_font = pg.font.Font(None, 28)
-    text_font = pg.font.Font(None, 32)
     bad_keys = [pg.K_ESCAPE, pg.K_RETURN, pg.K_TAB, pg.K_SPACE, pg.K_DELETE, pg.K_KP_ENTER]
 
     while True:
@@ -75,21 +48,32 @@ def main_menu(screen, clock, client):
             elif event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if play_button.rect.collidepoint(event.pos):
-                        if len(ibox_text) != 0 and client.connect():
+                        if len(ibox_text) != 0 and ibox_text != "Can't connect to the server!":
                             client.nickname = ibox_text
-                            pass
+                            connect = client.connect()
+                            if connect == 0:
+                                pass
+                            else:
+                                ibox_color = ibox_color_failure
+                                ibox_text = "Can't connect to the server!"
+                        else:
+                            ibox_color = ibox_color_failure
+                            ibox_text = ''
                     elif settings_button.rect.collidepoint(event.pos):
-                        settings_menu()
+                        settings_menu(screen, clock)
                     elif how_to_button.rect.collidepoint(event.pos):
-                        pass
+                        how_to_menu(screen, clock)
                     elif quit_button.rect.collidepoint(event.pos):
                         pg.quit()
                         sys.exit()
                     elif ibox.collidepoint(event.pos):
                         ibox_active = True
+                        ibox_color = ibox_color_active
+                        if ibox_text == "Can't connect to the server!":
+                            ibox_text = ''
                     else:
                         ibox_active = False
-                    ibox_color = ibox_color_active if ibox_active else ibox_color_inactive
+                        ibox_color = ibox_color_inactive
             elif event.type == pg.KEYDOWN:
                 if ibox_active:
                     if event.key == pg.K_BACKSPACE:

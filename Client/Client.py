@@ -17,8 +17,8 @@ class Client:
                 print(f"DEBUG: {response}")
                 response = self.nickname
                 self.client_socket.sendall(response.encode())
+                return 0
         else:
-            print("Can't connect to server!")
-            exit()
+            return -1
 
             

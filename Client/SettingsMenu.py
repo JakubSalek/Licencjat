@@ -1,51 +1,47 @@
-import pygame
-import sys
+from UIComponents import draw_text, Button
+import pygame as pg
 import SETTINGS as S
+import sys
 
-# Funkcja rysująca tekst na ekranie
-def draw_text(surface, text, color, x, y):
-    text_surface = S.FONT.render(text, True, color)
-    text_rect = text_surface.get_rect()
-    text_rect.topleft = (x, y)
-    surface.blit(text_surface, text_rect)
+def settings_menu(screen, clock):
+    # Czcionki
+    button_font = pg.font.Font(S.FONT, 36)
+    text_font = pg.font.Font(S.FONT, 28)
+    title_font = pg.font.Font(S.FONT, 94)
 
-# Funkcja główna menu
-def settings_menu(screen):
-    clock = pygame.time.Clock()
-    input_box = pygame.Rect(100, S.SCREEN_HEIGHT / 2 - 20, S.SCREEN_WIDTH - 200, 40)
-    color_inactive = pygame.Color('lightskyblue3')
-    color_active = pygame.Color('dodgerblue2')
-    color = color_inactive
-    active = False
-    text = ''
-    done = False
+    # Przyciski menu
+    back_button = Button(S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT/12, "Back", button_font, S.GRAY, S.WHITE)
+    save_button = Button(S.SCREEN_WIDTH*3/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT/12, "Save", button_font, S.GRAY, S.WHITE)
 
-    while not done:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-                pygame.quit()
+    while True:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if input_box.collidepoint(event.pos):
-                    active = not active
-                else:
-                    active = False
-                color = color_active if active else color_inactive
-            if event.type == pygame.KEYDOWN:
-                if active:
-                    if event.key == pygame.K_RETURN:
-                        print(text)
-                        # Tutaj można umieścić kod, który ma zostać wykonany po wpisaniu tekstu
-                        text = ''
-                    elif event.key == pygame.K_BACKSPACE:
-                        text = text[:-1]
-                    else:
-                        text += event.unicode
+            elif event.type == pg.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if back_button.rect.collidepoint(event.pos):
+                        return
+                    if save_button.rect.collidepoint(event.pos):
+                        pass
 
-        screen.fill(S.WHITE)
-        pygame.draw.rect(screen, color, input_box, 2)
-        draw_text(screen, 'Enter your name:', S.TEXT_COLOR, 100, S.SCREEN_HEIGHT / 2 - 50)
-        draw_text(screen, text, S.TEXT_COLOR, input_box.x + 5, input_box.y + 5)
-        pygame.display.flip()
+        # Rysowanie menu
+        screen.fill(S.BLACK)
+
+        # Rysowanie tytułu
+        draw_text(screen, "How to play", S.WHITE, S.SCREEN_WIDTH/2, S.SCREEN_HEIGHT/8, title_font, True)
+        
+        # Rysowanie przycisków
+        back_button.draw(screen)
+        save_button.draw(screen)
+
+        # Rysowanie tekstu how to play
+
+        # Odświeżenie ekranu
+        pg.display.flip()
         clock.tick(S.FPS)
+
+        # Sprawdzenie najechania myszką
+        mouse_pos = pg.mouse.get_pos()
+        back_button.check_hover(mouse_pos)
+        save_button.check_hover(mouse_pos)
