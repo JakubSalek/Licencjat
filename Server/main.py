@@ -1,6 +1,6 @@
 from Server import Server
-from table import Table
+import SETTINGS as S
 
 if __name__ == "__main__":
-    server = Server(host, port)
+    server = Server(S.HOST, S.PORT)
     server.start()
