@@ -16,6 +16,11 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 800
 WINDOW_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 FPS = 60
 
+# Possible settings
+RESOLUTION = [(640, 360), (800, 600),(1280, 720), (1280, 800), (1280, 1024), (1366, 768), (1440, 900), (1600, 900), (1920, 1080), (1920, 1200)]
+CAN_FPS = [30, 60, 90, 120]
+FULLSCREEN = False
+
 # Pliki pomocnicze
 HOW_TO_FILE = "Client\\TextFiles\\how_to_play.txt"
 

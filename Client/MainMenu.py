@@ -7,40 +7,47 @@ from UIComponents import Button, draw_text
 
 # Funkcja wyświetlająca menu główne
 def main_menu(screen, clock, client):
-    # Czcionki
-    text_font = pg.font.Font(S.FONT, 36)
-    title_font = pg.font.Font(S.FONT, 94)
 
-    # Zmienne do przycisków
-    buttons_width = S.SCREEN_WIDTH/2
-    buttons_height = S.SCREEN_HEIGHT/12
-    first_pos_x = S.SCREEN_WIDTH/4
-    first_pos_y = S.SCREEN_HEIGHT/4 + buttons_height
-    buttons_padding = buttons_height * 1.5
+    reinitialize = True
 
-    # Przyciski menu
-    play_button = Button(first_pos_x, first_pos_y, buttons_width, buttons_height, "Online Game", text_font, S.GRAY, S.WHITE)
-    settings_button = Button(first_pos_x, first_pos_y + buttons_padding, buttons_width, buttons_height, "Settings", text_font, S.GRAY, S.WHITE)
-    how_to_button = Button(first_pos_x, first_pos_y + buttons_padding * 2, buttons_width, buttons_height, "How to play", text_font, S.GRAY, S.WHITE)
-    quit_button = Button(first_pos_x, first_pos_y + buttons_padding * 3, buttons_width, buttons_height, "Quit", text_font, S.GRAY, S.WHITE)
-
-    # Zmienne do pola na wpisywanie
-    ibox_font = pg.font.Font(None, 28)
-    text_font = pg.font.Font(None, 32)
-    ibox_x = S.SCREEN_WIDTH * 3 / 5
-    ibox_y = S.SCREEN_HEIGHT * 11 / 12
-    ibox_width = S.SCREEN_WIDTH * 2 / 5 - 10
-    ibox_height = ibox_font.size("j")[1] * 1.5
-    ibox = pg.Rect(ibox_x, ibox_y, ibox_width, ibox_height)
-    ibox_color_inactive = pg.Color('lightskyblue3')
-    ibox_color_active = pg.Color('dodgerblue2')
-    ibox_color_failure = pg.Color(255, 0, 0)
-    ibox_color = ibox_color_inactive
-    ibox_active = False
-    ibox_text = ''
-    bad_keys = [pg.K_ESCAPE, pg.K_RETURN, pg.K_TAB, pg.K_SPACE, pg.K_DELETE, pg.K_KP_ENTER]
+    
 
     while True:
+        if reinitialize:
+            # Czcionki
+            text_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.04))
+            title_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.1))
+
+            # Zmienne do przycisków
+            buttons_width = S.SCREEN_WIDTH/2
+            buttons_height = S.SCREEN_HEIGHT/12
+            first_pos_x = S.SCREEN_WIDTH/4
+            first_pos_y = S.SCREEN_HEIGHT/4 + buttons_height
+            buttons_padding = buttons_height * 1.5
+
+            # Przyciski menu
+            play_button = Button(first_pos_x, first_pos_y, buttons_width, buttons_height, "Online Game", text_font, S.GRAY, S.WHITE)
+            settings_button = Button(first_pos_x, first_pos_y + buttons_padding, buttons_width, buttons_height, "Settings", text_font, S.GRAY, S.WHITE)
+            how_to_button = Button(first_pos_x, first_pos_y + buttons_padding * 2, buttons_width, buttons_height, "How to play", text_font, S.GRAY, S.WHITE)
+            quit_button = Button(first_pos_x, first_pos_y + buttons_padding * 3, buttons_width, buttons_height, "Quit", text_font, S.GRAY, S.WHITE)
+
+            # Zmienne do pola na wpisywanie
+            ibox_font = pg.font.Font(None, 28)
+            text_font = pg.font.Font(None, 32)
+            ibox_x = S.SCREEN_WIDTH * 3 / 5
+            ibox_y = S.SCREEN_HEIGHT * 11 / 12
+            ibox_width = S.SCREEN_WIDTH * 2 / 5 - 10
+            ibox_height = ibox_font.size("j")[1] * 1.5
+            ibox = pg.Rect(ibox_x, ibox_y, ibox_width, ibox_height)
+            ibox_color_inactive = pg.Color('lightskyblue3')
+            ibox_color_active = pg.Color('dodgerblue2')
+            ibox_color_failure = pg.Color(255, 0, 0)
+            ibox_color = ibox_color_inactive
+            ibox_active = False
+            ibox_text = ''
+            bad_keys = [pg.K_ESCAPE, pg.K_RETURN, pg.K_TAB, pg.K_SPACE, pg.K_DELETE, pg.K_KP_ENTER]
+
+            reinitialize = False
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -60,7 +67,7 @@ def main_menu(screen, clock, client):
                             ibox_color = ibox_color_failure
                             ibox_text = ''
                     elif settings_button.rect.collidepoint(event.pos):
-                        settings_menu(screen, clock)
+                        reinitialize = settings_menu(screen, clock)
                     elif how_to_button.rect.collidepoint(event.pos):
                         how_to_menu(screen, clock)
                     elif quit_button.rect.collidepoint(event.pos):

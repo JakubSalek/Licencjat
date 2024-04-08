@@ -5,10 +5,9 @@ import sys
 
 def how_to_menu(screen, clock):
     # Czcionki
-    button_font = pg.font.Font(S.FONT, 36)
-    text_font_size = 28
-    text_font = pg.font.Font(S.FONT, 28)
-    title_font = pg.font.Font(S.FONT, 80)
+    button_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.04))
+    text_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.03))
+    title_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.1))
 
     # Przyciski menu
     back_button = Button(S.SCREEN_WIDTH/4, S.SCREEN_HEIGHT*7/8, S.SCREEN_WIDTH/2, S.SCREEN_HEIGHT/12, "Back", button_font, S.GRAY, S.WHITE)

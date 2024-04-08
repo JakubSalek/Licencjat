@@ -22,6 +22,22 @@ class Button:
     def check_hover(self, pos):
         self.hovered = self.rect.collidepoint(pos)
 
+class Checkbox:
+    def __init__(self, surface, x, y, size=20, color=(200, 200, 200), border_color=(0, 0, 0)):
+        self.surface = surface
+        self.rect = pg.Rect(x, y, size, size)
+        self.color = color
+        self.border_color = border_color
+        self.checked = False
+
+    def draw(self):
+        pg.draw.rect(self.surface, self.border_color, self.rect, 2)
+        if self.checked:
+            pg.draw.line(self.surface, self.border_color, self.rect.topleft, self.rect.bottomright, 2)
+            pg.draw.line(self.surface, self.border_color, self.rect.topright, self.rect.bottomleft, 2)
+
+    def toggle(self):
+        self.checked = not self.checked
 
 def draw_text(surface, text, color, x, y, font, center: bool):
     text_surface = font.render(text, True, color)
