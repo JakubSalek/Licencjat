@@ -22,6 +22,7 @@ class Button:
     def check_hover(self, pos):
         self.hovered = self.rect.collidepoint(pos)
 
+# Klasa checkboxów
 class Checkbox:
     def __init__(self, surface, x, y, size=20, color=(200, 200, 200), border_color=(0, 0, 0)):
         self.surface = surface
@@ -39,6 +40,7 @@ class Checkbox:
     def toggle(self):
         self.checked = not self.checked
 
+# Funkcja rysująca tekst zaczynając od lewego górnego punktu, wycentrowany do puntku
 def draw_text(surface, text, color, x, y, font, center: bool):
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()
@@ -48,11 +50,13 @@ def draw_text(surface, text, color, x, y, font, center: bool):
         text_rect.topleft = (x, y)
     surface.blit(text_surface, text_rect)
 
+# Zczytanie tekstu z pliku
 def read_text_from_file(filename):
     with open(filename, "r") as file:
         text = file.read()
     return text
 
+# Rysowanie tekstu z możliwością scrollowania
 def render_text_scrolled(screen, font, text, scroll, color, line_spacing, rect, padding):
     y_offset = padding
     for line in text.split("\n"):
@@ -63,7 +67,6 @@ def render_text_scrolled(screen, font, text, scroll, color, line_spacing, rect, 
                 screen.blit(rendered_line, text_rect.topleft)
             y_offset += rendered_line.get_height() + line_spacing
 
-# Można dodać ewentualnie żeby rozdzielało w miejscach gdzie są spacje
 # Dzieli zbyt długi tekst na mniejsze, rozdzielając je
 def split_line_by_width(line, font, width):
     total_width = 0
