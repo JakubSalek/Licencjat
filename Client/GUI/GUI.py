@@ -1,9 +1,8 @@
 import pygame as pg
-import threading
 from GUI.MainMenu import MainMenu
 import SETTINGS as S
 
-class GUI(threading.Thread):
+class GUI():
     def __init__(self, client, queue):
         # Do threadingu
         super().__init__()
@@ -15,6 +14,7 @@ class GUI(threading.Thread):
         pg.display.set_caption('Gold & Treasures!')
 
         # Inicjalizacja wspólnych elementów interfejsu
+        self.xs_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.02))
         self.text_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.03))
         self.ibox_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.02))
         self.title_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.1))
@@ -29,7 +29,9 @@ class GUI(threading.Thread):
         self.menu = MainMenu(self)
 
     def reinitialize_menu(self):
+        self.xs_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.02))
         self.text_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.03))
+        self.ibox_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.02))
         self.title_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.1))
         self.button_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.04))
         

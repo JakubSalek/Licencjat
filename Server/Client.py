@@ -4,3 +4,4 @@ class Client:
         self.client_socket = client_socket
         self. client_address = client_address
         self.nickname = ''
+        self.current_menu = "NONEED"

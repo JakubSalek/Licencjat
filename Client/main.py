@@ -8,7 +8,4 @@ if __name__ == "__main__":
     client = Client(message_queue)
     gui = GUI(client, message_queue)
 
-    gui.start()
-
-
 

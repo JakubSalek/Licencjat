@@ -3,6 +3,7 @@ import sys
 from GUI.Menu import Menu
 from GUI.SettingsMenu import SettingsMenu
 from GUI.HowToMenu import HowToMenu
+from GUI.ChooseTableMenu import ChooseTableMenu
 from GUI.UIComponents import Button, draw_text
 import SETTINGS as S
 
@@ -18,10 +19,14 @@ class MainMenu(Menu):
         self.buttons_padding = self.buttons_height * 1.5
 
         # Przyciski menu
-        self.play_button = Button(self.first_pos_x, self.first_pos_y, self.buttons_width, self.buttons_height, "Online Game", self.gui.button_font, S.GRAY, S.WHITE)
-        self.settings_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding, self.buttons_width, self.buttons_height, "Settings", self.gui.button_font, S.GRAY, S.WHITE)
-        self.how_to_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 2, self.buttons_width, self.buttons_height, "How to play", self.gui.button_font, S.GRAY, S.WHITE)
-        self.quit_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 3, self.buttons_width, self.buttons_height, "Quit", self.gui.button_font, S.GRAY, S.WHITE)
+        self.play_button = Button(self.first_pos_x, self.first_pos_y, self.buttons_width, self.buttons_height,
+                                "Online Game", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.settings_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding, self.buttons_width, self.buttons_height,
+                                "Settings", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.how_to_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 2, self.buttons_width, self.buttons_height,
+                                "How to play", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.quit_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 3, self.buttons_width, self.buttons_height,
+                                "Quit", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
 
         # Zmienne do pola na wpisywanie
         self.ibox_x = S.SCREEN_WIDTH * 3 / 5
@@ -34,13 +39,15 @@ class MainMenu(Menu):
         self.ibox_color_failure = pg.Color(255, 0, 0)
         self.ibox_color = self.ibox_color_inactive
         self.ibox_active = False
+        self.ibox_locked = False
         self.ibox_text = ''
-        self.bad_keys = [pg.K_ESCAPE, pg.K_RETURN, pg.K_TAB, pg.K_SPACE, pg.K_DELETE, pg.K_KP_ENTER]
+        self.bad_keys = [pg.K_ESCAPE, pg.K_RETURN, pg.K_TAB, pg.K_SPACE, pg.K_DELETE, pg.K_KP_ENTER, pg.K_SEMICOLON, pg.K_DOLLAR]
 
         self.how_to_menu = HowToMenu(gui)
         self.settings_menu = SettingsMenu(gui)
+        self.choose_table_menu = ChooseTableMenu(gui)
 
-        self.menus = [self.how_to_menu]
+        self.menus = [self.how_to_menu, self.choose_table_menu]
 
         self.run()
 
@@ -50,16 +57,16 @@ class MainMenu(Menu):
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    pg.quit()
-                    sys.exit()
+                    self.close_program()
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         if self.play_button.rect.collidepoint(event.pos):
                             if len(self.ibox_text) != 0 and self.ibox_text != "Can't connect to the server!":
                                 self.gui.client.nickname = self.ibox_text
                                 connect = self.gui.client.connect()
-                                if connect == 0:
-                                    pass
+                                if connect == 0 or connect == 1:
+                                    self.ibox_locked = True
+                                    self.choose_table_menu.run()
                                 else:
                                     self.ibox_color = self.ibox_color_failure
                                     self.ibox_text = "Can't connect to the server!"
@@ -71,9 +78,8 @@ class MainMenu(Menu):
                         elif self.how_to_button.rect.collidepoint(event.pos):
                             self.how_to_menu.run()
                         elif self.quit_button.rect.collidepoint(event.pos):
-                            pg.quit()
-                            sys.exit()
-                        elif self.ibox.collidepoint(event.pos):
+                            self.close_program()
+                        elif self.ibox.collidepoint(event.pos) and not self.ibox_locked:
                             self.ibox_active = True
                             self.ibox_color = self.ibox_color_active
                             if self.ibox_text == "Can't connect to the server!":
@@ -82,7 +88,7 @@ class MainMenu(Menu):
                             self.ibox_active = False
                             self.ibox_color = self.ibox_color_inactive
                 elif event.type == pg.KEYDOWN:
-                    if self.ibox_active:
+                    if self.ibox_active and not self.ibox_locked:
                         if event.key == pg.K_BACKSPACE:
                             self.ibox_text = self.ibox_text[:-1]
                         else:
@@ -91,6 +97,7 @@ class MainMenu(Menu):
                                     self.ibox_text += event.unicode
         
             self.draw()
+            self.check_server()
 
     def draw(self):
         # Pomocnicze zmienne
@@ -99,7 +106,7 @@ class MainMenu(Menu):
         title_font = self.gui.title_font
 
         # Rysowanie menu
-        screen.fill(S.BLACK)
+        screen.fill(S.BG_COLOR)
 
         # Rysowanie tytułu
         draw_text(screen, "Gold & Treasures", S.YELLOW, S.SCREEN_WIDTH/2, S.SCREEN_HEIGHT/8, title_font, True)
@@ -113,7 +120,7 @@ class MainMenu(Menu):
         # Rysowanie pola do wpisywania
         pg.draw.rect(screen, self.ibox_color, self.ibox, 2)
         pg.draw.rect(screen, S.WHITE, self.ibox.inflate(-4, -4))
-        draw_text(screen, 'Nickname:', S.WHITE, self.ibox.x + 1, self.ibox.y - self.ibox_height * 1.5, text_font, False)
+        draw_text(screen, 'Nickname:', S.FONT_COLOR, self.ibox.x + 1, self.ibox.y - self.ibox_height * 1.5, text_font, False)
         draw_text(screen, self.ibox_text, S.BLACK, self.ibox.x + 5, self.ibox.y + 5, self.gui.ibox_font, False)
 
         # Odświeżenie ekranu
@@ -137,10 +144,14 @@ class MainMenu(Menu):
         self.buttons_padding = self.buttons_height * 1.5
 
         # Przyciski menu
-        self.play_button = Button(self.first_pos_x, self.first_pos_y, self.buttons_width, self.buttons_height, "Online Game", self.gui.button_font, S.GRAY, S.WHITE)
-        self.settings_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding, self.buttons_width, self.buttons_height, "Settings", self.gui.button_font, S.GRAY, S.WHITE)
-        self.how_to_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 2, self.buttons_width, self.buttons_height, "How to play", self.gui.button_font, S.GRAY, S.WHITE)
-        self.quit_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 3, self.buttons_width, self.buttons_height, "Quit", self.gui.button_font, S.GRAY, S.WHITE)
+        self.play_button = Button(self.first_pos_x, self.first_pos_y, self.buttons_width, self.buttons_height,
+                                "Online Game", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.settings_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding, self.buttons_width, self.buttons_height,
+                                "Settings", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.how_to_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 2, self.buttons_width, self.buttons_height,
+                                "How to play", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.quit_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 3, self.buttons_width, self.buttons_height,
+                                "Quit", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
 
         # Zmienne do pola na wpisywanie
         self.ibox_x = S.SCREEN_WIDTH * 3 / 5
@@ -153,3 +164,11 @@ class MainMenu(Menu):
             menu.reinitialize = True
 
         self.reinitialize = False
+
+    
+    def check_server(self):
+        while not self.gui.message_queue.empty():
+            message = self.gui.message_queue.get_nowait()
+
+    def close_program(self):
+        return super().close_program()

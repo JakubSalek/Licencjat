@@ -1,3 +1,6 @@
+import sys
+import pygame as pg
+
 class Menu:
     def __init__(self, gui):
         self.reinitialize = False
@@ -11,3 +14,12 @@ class Menu:
 
     def reinitialize_menu(self):
         pass
+    
+    def check_server(self):
+        pass
+
+    def close_program(self):
+        if self.gui.client.is_running:
+            self.gui.client.send_disconnect()
+        pg.quit()
+        sys.exit()

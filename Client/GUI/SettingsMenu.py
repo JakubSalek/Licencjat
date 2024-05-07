@@ -13,16 +13,22 @@ class SettingsMenu(Menu):
         self.fps_option = S.CAN_FPS.index(S.FPS)
 
         button_font = self.gui.button_font
-
-        # Przyciski menu
-        self.back_button = Button(S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT/12, "Back", button_font, S.GRAY, S.WHITE)
-        self.save_button = Button(S.SCREEN_WIDTH*3/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT/12, "Save", button_font, S.GRAY, S.WHITE)
         self.arrow_width = S.SCREEN_WIDTH/12
         self.arrow_height = S.SCREEN_HEIGHT/12
-        self.resolution_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*8/20, self.arrow_width, self.arrow_height, ">", button_font, S.GRAY, S.WHITE)
-        self.resolution_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*8/20, self.arrow_width, self.arrow_height, "<", button_font, S.GRAY, S.WHITE)
-        self.fps_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*10/20, self.arrow_width, self.arrow_height, ">", button_font, S.GRAY, S.WHITE)
-        self.fps_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*10/20, self.arrow_width, self.arrow_height, "<", button_font, S.GRAY, S.WHITE)
+
+        # Przyciski menu
+        self.back_button = Button(S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5,
+                                S.SCREEN_HEIGHT/12, "Back", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.save_button = Button(S.SCREEN_WIDTH*3/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5,
+                                S.SCREEN_HEIGHT/12, "Save", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.resolution_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*8/20, self.arrow_width,
+                                            self.arrow_height, ">", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.resolution_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*8/20, self.arrow_width,
+                                            self.arrow_height, "<", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.fps_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*10/20, self.arrow_width,
+                                    self.arrow_height, ">", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.fps_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*10/20, self.arrow_width,
+                                    self.arrow_height, "<", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
 
         # Checkbox
         self.fullscreen_checkbox = Checkbox(self.gui.screen, S.SCREEN_WIDTH*15/20, S.SCREEN_HEIGHT*6/20, self.arrow_height, S.GRAY, S.WHITE)
@@ -36,8 +42,7 @@ class SettingsMenu(Menu):
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    pg.quit()
-                    sys.exit()
+                    self.close_program()
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         if self.back_button.rect.collidepoint(event.pos):
@@ -71,21 +76,22 @@ class SettingsMenu(Menu):
                             self.reinitialize = True
                             return True
             self.draw()
+            self.check_server()
 
     def draw(self):
         screen = self.gui.screen
         text_font = self.gui.text_font
         # Rysowanie menu
-        screen.fill(S.BLACK)
+        screen.fill(S.BG_COLOR)
 
         # Rysowanie tytułu
-        draw_text(screen, "Settings", S.WHITE, S.SCREEN_WIDTH/2, S.SCREEN_HEIGHT/10, self.gui.title_font, True)
-        draw_text(screen, "Fullscreen", S.WHITE, S.SCREEN_WIDTH*6/20, S.SCREEN_HEIGHT*6/20+self.arrow_height/2, text_font, True)
-        draw_text(screen, "Resolution", S.WHITE, S.SCREEN_WIDTH*6/20, S.SCREEN_HEIGHT*8/20+self.arrow_height/2, text_font, True)
-        draw_text(screen, "FPS", S.WHITE, S.SCREEN_WIDTH*6/20, S.SCREEN_HEIGHT*10/20+self.arrow_height/2, text_font, True)
+        draw_text(screen, "Settings", S.FONT_COLOR, S.SCREEN_WIDTH/2, S.SCREEN_HEIGHT/10, self.gui.title_font, True)
+        draw_text(screen, "Fullscreen", S.FONT_COLOR, S.SCREEN_WIDTH*6/20, S.SCREEN_HEIGHT*6/20+self.arrow_height/2, text_font, True)
+        draw_text(screen, "Resolution", S.FONT_COLOR, S.SCREEN_WIDTH*6/20, S.SCREEN_HEIGHT*8/20+self.arrow_height/2, text_font, True)
+        draw_text(screen, "FPS", S.FONT_COLOR, S.SCREEN_WIDTH*6/20, S.SCREEN_HEIGHT*10/20+self.arrow_height/2, text_font, True)
         resolution_text = str(S.RESOLUTION[self.resolution_option][0]) + "x" + str(S.RESOLUTION[self.resolution_option][1])
-        draw_text(screen, resolution_text, S.WHITE, S.SCREEN_WIDTH*15/20, S.SCREEN_HEIGHT*8/20+self.arrow_height/2, text_font, True)
-        draw_text(screen, str(S.CAN_FPS[self.fps_option]), S.WHITE, S.SCREEN_WIDTH*15/20, S.SCREEN_HEIGHT*10/20+self.arrow_height/2, text_font, True)
+        draw_text(screen, resolution_text, S.FONT_COLOR, S.SCREEN_WIDTH*15/20, S.SCREEN_HEIGHT*8/20+self.arrow_height/2, text_font, True)
+        draw_text(screen, str(S.CAN_FPS[self.fps_option]), S.FONT_COLOR, S.SCREEN_WIDTH*15/20, S.SCREEN_HEIGHT*10/20+self.arrow_height/2, text_font, True)
 
         # Rysowanie przycisków
         for button in self.buttons:
@@ -105,15 +111,22 @@ class SettingsMenu(Menu):
     def reinitialize_menu(self):
         button_font = self.gui.button_font
 
-        # Przyciski menu
-        self.back_button = Button(S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT/12, "Back", button_font, S.GRAY, S.WHITE)
-        self.save_button = Button(S.SCREEN_WIDTH*3/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT/12, "Save", button_font, S.GRAY, S.WHITE)
         self.arrow_width = S.SCREEN_WIDTH/12
         self.arrow_height = S.SCREEN_HEIGHT/12
-        self.resolution_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*8/20, self.arrow_width, self.arrow_height, ">", button_font, S.GRAY, S.WHITE)
-        self.resolution_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*8/20, self.arrow_width, self.arrow_height, "<", button_font, S.GRAY, S.WHITE)
-        self.fps_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*10/20, self.arrow_width, self.arrow_height, ">", button_font, S.GRAY, S.WHITE)
-        self.fps_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*10/20, self.arrow_width, self.arrow_height, "<", button_font, S.GRAY, S.WHITE)
+
+        # Przyciski menu
+        self.back_button = Button(S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5,
+                                S.SCREEN_HEIGHT/12, "Back", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.save_button = Button(S.SCREEN_WIDTH*3/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5,
+                                S.SCREEN_HEIGHT/12, "Save", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.resolution_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*8/20, self.arrow_width,
+                                            self.arrow_height, ">", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.resolution_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*8/20, self.arrow_width,
+                                            self.arrow_height, "<", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.fps_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*10/20, self.arrow_width,
+                                    self.arrow_height, ">", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        self.fps_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*10/20, self.arrow_width,
+                                    self.arrow_height, "<", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
 
         # Checkbox
         self.fullscreen_checkbox = Checkbox(self.gui.screen, S.SCREEN_WIDTH*15/20, S.SCREEN_HEIGHT*6/20, self.arrow_height, S.GRAY, S.WHITE)
@@ -122,3 +135,11 @@ class SettingsMenu(Menu):
         self.buttons = [self.back_button, self.save_button, self.fps_left_button, self.fps_right_button, self.resolution_left_button, self.resolution_right_button]
 
         self.reinitialize = False
+
+
+    def check_server(self):
+        while not self.gui.message_queue.empty():
+            message = self.gui.message_queue.get_nowait()
+            
+    def close_program(self):
+        return super().close_program()

@@ -1,7 +1,8 @@
 class Table:
-    def __init__(self, id):
+    def __init__(self, id, owner):
         self.id = id
-        self.players = []
+        self.name = f"{owner.nickname}'s table"
+        self.players = [owner]
 
     def add_player(self, player):
         if len(self.players) < 4:
