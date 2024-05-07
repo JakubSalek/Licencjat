@@ -1,7 +1,9 @@
 import pygame as pg
 from GUI.Menu import Menu
+from GUI.TableMenu import TableMenu
 from GUI.UIComponents import Button, draw_text
 from Table import Table
+from Player import Player
 import SETTINGS as S
 
 class TableItem():
@@ -17,9 +19,10 @@ class TableItem():
                             "Join", self.font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
 
     def draw(self):
-        draw_text(self.surface, str(self.table.id), S.FONT_COLOR2, self.swidth*0.10, self.sheight*0.5, self.font, True)
-        draw_text(self.surface, str(self.table.name), S.FONT_COLOR2, self.swidth*0.25, self.sheight*0.5, self.font, True)
-        draw_text(self.surface, f"{str(self.table.curr_players)}/4", S.FONT_COLOR2, self.swidth*0.5, self.sheight*0.5, self.font, True)
+        self.surface.fill(S.BETTER_GRAY)
+        draw_text(self.surface, str(self.table.id), S.FONT_COLOR2, self.swidth*0.05, self.sheight*0.5, self.font, True)
+        draw_text(self.surface, str(self.table.name), S.FONT_COLOR2, self.swidth*0.35, self.sheight*0.5, self.font, True)
+        draw_text(self.surface, f"{str(self.table.curr_players)}/4", S.FONT_COLOR2, self.swidth*0.65, self.sheight*0.5, self.font, True)
         self.button.draw(self.surface)
 
     def get_button(self):
@@ -70,12 +73,14 @@ class ChooseTableMenu(Menu):
                         elif self.back_button.rect.collidepoint(event.pos):
                             return
                         else:
+                            # Sprawdzenie wciśnięcia na każdym guziku przy stolikach
                             for sprite in self.sprite_items:
                                 x, y = event.pos
                                 x -= sprite.rect.left
                                 y -= sprite.rect.top
                                 if sprite.button.rect.collidepoint((x, y)):
                                     # Obsługa wciśnięcia
+                                    print(f"Clicked id: {sprite.table.id}")
                                     pass
                     elif event.button == 4:
                         self.scroll -= self.mouse_scroll_speed if self.scroll > 0 else 0
@@ -180,9 +185,10 @@ class ChooseTableMenu(Menu):
                 self.refresh_tables = True
             
             elif message.startswith("CreateTable"):
-                _, id = message.split(";")
-                # Przejście do menu stolika
-
+                _, id, name = message.split(";")
+                my_table = Table(id, name, 1)
+                my_table.players = [Player(self.gui.client.id, self.gui.client.nickname)]
+                TableMenu(self.gui, my_table)
             else:
                 print(f"Unhandled message \"{message}\"")
 

@@ -21,7 +21,7 @@ class Server:
         while True:
             client_socket, client_address = self.server_socket.accept()
             print(f"New connection from: {client_address}")
-            client = Client(id, client_socket, client_address)
+            client = Client(self.clients_id, client_socket, client_address)
             self.clients_id += 1
             self.clients.append(client)
             threading.Thread(target=self.handle_client, args=(client,)).start()
@@ -32,6 +32,7 @@ class Server:
         response = c.client_socket.recv(1024).decode()
         self.print_coming_message(response, c)
         c.nickname = response
+        self.send_message(c.id, c)
 
         while True:
             response = c.client_socket.recv(1024).decode()
@@ -64,9 +65,9 @@ class Server:
         self.tables.append(table)
         
         # Informacja zwrotna
-        message = f"CreateTable;{table.id}"
+        message = f"CreateTable;{table.id};{table.name}"
         self.send_message(message, c)
-        # c.current_menu = f"Table;{table.id}"
+        c.current_menu = f"Game;{table.id}"
         
         # Wysłanie informacji do wszystkich pozostałych w tym menu
         for client in self.clients:
@@ -77,7 +78,7 @@ class Server:
 
     def send_message(self, message: str, c: Client):
         print(f"Sending response to {c.client_socket} stating \"{message}\"")
-        c.client_socket.sendall((message+"$").encode())
+        c.client_socket.sendall((str(message)+"$").encode())
 
     def print_coming_message(self, message, c: Client):
         print(f"Got response from {c.client_socket} stating \"{message}\"")

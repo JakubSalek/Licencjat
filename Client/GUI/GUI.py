@@ -14,7 +14,7 @@ class GUI():
         pg.display.set_caption('Gold & Treasures!')
 
         # Inicjalizacja wspólnych elementów interfejsu
-        self.xs_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.02))
+        self.xs_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.03))
         self.text_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.03))
         self.ibox_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.02))
         self.title_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.1))

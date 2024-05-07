@@ -1,6 +1,5 @@
 import socket
 import threading
-import sys
 import SETTINGS as S
 
 class Client(threading.Thread):
@@ -8,6 +7,7 @@ class Client(threading.Thread):
         super().__init__()
 
         self.nickname = ""
+        self.id = -1
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.is_connected = False
         self.is_running = False
@@ -23,6 +23,8 @@ class Client(threading.Thread):
                     print(f"DEBUG: {response}") if S.DEBUG else None
                     response = self.nickname
                     self.client_socket.sendall(response.encode())
+                    response = self.client_socket.recv(1024).decode()
+                    self.id, _ = response.split('$')
                     self.start()
                     return 0
             else:
