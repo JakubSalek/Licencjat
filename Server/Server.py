@@ -35,7 +35,7 @@ class Server:
         self.send_message(c.id, c)
 
         while True:
-            response = c.client_socket.recv(1024).decode()
+            response: str = c.client_socket.recv(1024).decode()
             self.print_coming_message(response, c)
 
             if response == "Disconnect":
@@ -47,6 +47,15 @@ class Server:
                 self.send_tables(c)
             elif response == "CreateTable":
                 self.create_table(c)
+            elif response.startswith("JoinTable"):
+                _, id = response.split(";")
+                self.join_or_leave_table(c, id, True)
+            elif response.startswith("LeaveTable"):
+                _, id = response.split(";")
+                self.join_or_leave_table(c, id, False)
+            elif response.startswith("DeleteTable"):
+                _, id = response.split(";")
+                self.delete_table(c, id)
         
             elif response == "ChooseTableMenu":
                 c.current_menu = response
@@ -73,6 +82,55 @@ class Server:
         for client in self.clients:
             if client.current_menu == "ChooseTableMenu":
                 message = f"Table;{table.id};{table.name};{len(table.players)}"
+                self.send_message(message, client)
+
+    def delete_table(self, c, id):
+        my_table = None
+        for table in self.tables:
+            if str(table.id) == id:
+                my_table = table
+        
+        self.tables.remove(my_table)
+
+        for client in self.clients:
+            if client.current_menu == "ChooseTableMenu":
+                message = f"DeleteTable;{my_table.id}"
+                self.send_message(message, client)
+
+        message = "TableDeleted"
+        for player in my_table.players:
+            self.send_message(message, player)
+
+
+    def join_or_leave_table(self, c, id, is_joining):
+        my_table = None
+        for table in self.tables:
+            if str(table.id) == id:
+                my_table = table
+        if is_joining:
+            c.current_menu = f"Game;{my_table.id}"
+            my_table.players.append(c) 
+        else:
+            c.current_menu = f"ChooseTableMenu"
+            my_table.players.remove(c)
+            self.send_tables(c)
+
+        # Wyślij wszystkich aktualnych graczy do wszystkich przy stoliku
+        self.send_players(my_table)
+
+        # Wyślij do wszystkich w ChooseTable infomacje o zmianie stolika
+        for client in self.clients:
+            if client.current_menu == "ChooseTableMenu":
+                message = f"Table;{my_table.id};{my_table.name};{len(my_table.players)}"
+                self.send_message(message, client)
+
+    def send_players(self, table):
+        message = "PlayersList"
+        for player in table.players:
+            message += f";{str(player.id)};{player.nickname}"
+
+        for client in self.clients:
+            if client.current_menu == f"Game;{table.id}":
                 self.send_message(message, client)
 
 

@@ -2,6 +2,7 @@ from GUI.UIComponents import draw_text, Button
 import pygame as pg
 from GUI.Menu import Menu
 import SETTINGS as S
+from Player import Player
 
 class PlayerItem():
     def __init__(self, player, font, width, height):
@@ -19,10 +20,11 @@ class PlayerItem():
         draw_text(self.surface, "Name: " + str(self.player.nickname), S.FONT_COLOR2, self.swidth*0.5, self.sheight*0.5, self.font, True)
 
 class TableMenu(Menu):
-    def __init__(self, gui, table):
+    def __init__(self, gui, table, is_owner):
         super().__init__(gui)   
         self.table = table
-        self.owner = self.table.players[0].id == self.gui.client.id
+        self.owner = is_owner
+        self.table_alive = True
         self.buttons = []
         self.refresh_players = True
         self.player_sprites = []
@@ -51,7 +53,7 @@ class TableMenu(Menu):
         
     def run(self):
         # Główna pętla menu
-        while True:
+        while self.table_alive:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     self.close_program()
@@ -60,15 +62,14 @@ class TableMenu(Menu):
                     if event.button == 1:
                         if self.owner:
                             if self.delete_button.rect.collidepoint(event.pos):
-                                # TODO usuniecie stolika i cofniecie wszystkich do menu
-                                pass
+                                self.gui.client.delete_table(self.table)
                             if self.start_button.rect.collidepoint(event.pos):
                                 # TODO rozpoczecie rozgrywki
                                 pass
                         else:
                             if self.leave_button.rect.collidepoint(event.pos):
-                                # TODO cofniecie i poinformowanie reszty o zmianie
-                                pass
+                                self.gui.client.leave_table(self.table)
+                                return
 
             self.draw()
             self.check_server()
@@ -117,7 +118,21 @@ class TableMenu(Menu):
 
     def check_server(self):
         while not self.gui.message_queue.empty():
-            message = self.gui.message_queue.get_nowait()
+            message: str = self.gui.message_queue.get_nowait()
+            if message.startswith("PlayersList"):
+                splitted = message.split(";")
+                splitted = splitted[1:]
+                self.table.players = []
+                for i in range(len(splitted)//2):
+                    id = splitted[i * 2]
+                    name = splitted[i * 2 + 1]
+                    self.table.players.append(Player(id, name))
+                self.refresh_players = True
+            elif message == "TableDeleted":
+                self.table_alive = False
+            else:
+                print(f"Unhandled message \"{message}\"")
+
             
     def close_program(self):
         return super().close_program()

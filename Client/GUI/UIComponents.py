@@ -10,6 +10,7 @@ class Button:
         self.normal_color = normal_color
         self.hover_color = hover_color
         self.hovered = False
+        self.active = True
 
     def draw(self, surface):
         color = self.hover_color if self.hovered else self.normal_color

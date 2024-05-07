@@ -17,6 +17,8 @@ class TableItem():
         self.rect = self.surface.get_rect()
         self.button = Button(self.swidth*0.75, self.sheight*0.25, self.swidth*0.15, self.sheight*0.5,
                             "Join", self.font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+        if self.table.curr_players == "4":
+            self.button.active = False
 
     def draw(self):
         self.surface.fill(S.BETTER_GRAY)
@@ -73,15 +75,15 @@ class ChooseTableMenu(Menu):
                         elif self.back_button.rect.collidepoint(event.pos):
                             return
                         else:
-                            # Sprawdzenie wciśnięcia na każdym guziku przy stolikach
                             for sprite in self.sprite_items:
-                                x, y = event.pos
-                                x -= sprite.rect.left
-                                y -= sprite.rect.top
-                                if sprite.button.rect.collidepoint((x, y)):
-                                    # Obsługa wciśnięcia
-                                    print(f"Clicked id: {sprite.table.id}")
-                                    pass
+                                if sprite.button.active:
+                                    x, y = event.pos
+                                    x -= sprite.rect.left
+                                    y -= sprite.rect.top
+                                    if sprite.button.rect.collidepoint((x, y)):
+                                        self.gui.client.join_table(sprite.table)
+                                        TableMenu(self.gui, sprite.table, False)
+                                        self.clear_and_ask()
                     elif event.button == 4:
                         self.scroll -= self.mouse_scroll_speed if self.scroll > 0 else 0
                         self.refresh_tables = True
@@ -137,10 +139,11 @@ class ChooseTableMenu(Menu):
         self.back_button.check_hover(mouse_pos)
         self.create_button.check_hover(mouse_pos)
         for sprite in self.sprite_items:
-            x, y = mouse_pos
-            x -= sprite.rect.left
-            y -= sprite.rect.top
-            sprite.button.check_hover((x, y))
+            if sprite.button.active:
+                x, y = mouse_pos
+                x -= sprite.rect.left
+                y -= sprite.rect.top
+                sprite.button.check_hover((x, y))
 
 
     def reinitialize_menu(self):
@@ -183,15 +186,26 @@ class ChooseTableMenu(Menu):
                     self.tables.append(Table(id, name, curr_players))
                 self.scrollable_height = len(self.tables) * self.te_height - S.SCREEN_HEIGHT*9/12
                 self.refresh_tables = True
-            
             elif message.startswith("CreateTable"):
                 _, id, name = message.split(";")
                 my_table = Table(id, name, 1)
                 my_table.players = [Player(self.gui.client.id, self.gui.client.nickname)]
-                TableMenu(self.gui, my_table)
+                TableMenu(self.gui, my_table, True)
+                self.clear_and_ask()
+            elif message.startswith("DeleteTable"):
+                _, id = message.split(";")
+                for table in self.tables:
+                    if table.id == id:
+                        self.tables.remove(table)
+                        self.refresh_tables = True
+                        break
             else:
                 print(f"Unhandled message \"{message}\"")
 
+    def clear_and_ask(self):
+        self.tables = []
+        self.refresh_tables = True
+        self.gui.client.send_menu("ChooseTableMenu")
 
     def close_program(self):
         return super().close_program()

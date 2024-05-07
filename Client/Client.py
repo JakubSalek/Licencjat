@@ -36,6 +36,18 @@ class Client(threading.Thread):
         message = "CreateTable"
         self.client_socket.sendall(message.encode())
 
+    def join_table(self, table):
+        message = f"JoinTable;{table.id}"
+        self.client_socket.sendall(message.encode())
+    
+    def leave_table(self, table):
+        message = f"LeaveTable;{table.id}"
+        self.client_socket.sendall(message.encode())
+
+    def delete_table(self, table):
+        message = f"DeleteTable;{table.id}"
+        self.client_socket.sendall(message.encode())
+
     def send_menu(self, menu):
         message = menu
         self.client_socket.sendall(message.encode())
