@@ -15,9 +15,12 @@ BUTTON_COLOR = (51, 204, 51)
 BUTTON_HOVER_COLOR = (0, 153, 51)
 FONT_COLOR = (255, 255, 255)
 FONT_COLOR2 = (0, 0, 0)
+TILE_COLOR = (204, 153, 0)
+TILE_BORDER_COLOR = (102, 51, 0)
+PLAYER_COLORS = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 0, 255)]
 
 # Ustawienia pygame
-SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
+SCREEN_WIDTH, SCREEN_HEIGHT = 640, 360
 WINDOW_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 FPS = 60
 
@@ -29,6 +32,11 @@ FULLSCREEN = False
 # Pliki pomocnicze
 HOW_TO_FILE = "Client\\TextFiles\\how_to_play.txt"
 FONT = "Client\\Fonts\\arial.ttf"
+
+# Ustawienia gry
+TILE_COUNT = 100
+TILES_ROW = 10
+TILES_COL = 5
 
 # DEBUG
 DEBUG = True

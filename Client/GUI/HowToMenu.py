@@ -91,6 +91,7 @@ class HowToMenu(Menu):
     def check_server(self):
         while not self.gui.message_queue.empty():
             message = self.gui.message_queue.get_nowait()
+            print(f"Unhandled message \"{message}\"") if S.DEBUG else None
             
     def close_program(self):
         return super().close_program()

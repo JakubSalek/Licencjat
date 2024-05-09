@@ -55,15 +55,22 @@ class Server:
                 self.join_or_leave_table(c, id, False)
             elif response.startswith("DeleteTable"):
                 _, id = response.split(";")
-                self.delete_table(c, id)
+                self.delete_table(id)
+
+            elif response.startswith("StartGame"):
+                _, id = response.split(";")
+                self.start_game(id)
         
             elif response == "ChooseTableMenu":
                 c.current_menu = response
                 self.send_tables(c)
+            elif response == "NONEED":
+                c.current_menu = response
 
+    # Wyślij informację o wszystkich stolikach
     def send_tables(self, c):
         for table in self.tables:
-            message = f"Table;{table.id};{table.name};{len(table.players)}"
+            message = f"Table;{table.id};{table.name};{len(table.players)};{1 if table.is_started else 0}"
             self.send_message(message, c)
     
     # Utwórz nowy stolik
@@ -81,10 +88,11 @@ class Server:
         # Wysłanie informacji do wszystkich pozostałych w tym menu
         for client in self.clients:
             if client.current_menu == "ChooseTableMenu":
-                message = f"Table;{table.id};{table.name};{len(table.players)}"
+                message = f"Table;{table.id};{table.name};{len(table.players)};{1 if table.is_started else 0}"
                 self.send_message(message, client)
 
-    def delete_table(self, c, id):
+    # Usuń stolik
+    def delete_table(self, id):
         my_table = None
         for table in self.tables:
             if str(table.id) == id:
@@ -97,11 +105,11 @@ class Server:
                 message = f"DeleteTable;{my_table.id}"
                 self.send_message(message, client)
 
-        message = "TableDeleted"
+        message = "DeletedTable"
         for player in my_table.players:
             self.send_message(message, player)
 
-
+    # Dołącz lub opuść stolik
     def join_or_leave_table(self, c, id, is_joining):
         my_table = None
         for table in self.tables:
@@ -121,9 +129,10 @@ class Server:
         # Wyślij do wszystkich w ChooseTable infomacje o zmianie stolika
         for client in self.clients:
             if client.current_menu == "ChooseTableMenu":
-                message = f"Table;{my_table.id};{my_table.name};{len(my_table.players)}"
+                message = f"Table;{my_table.id};{my_table.name};{len(my_table.players)};{1 if my_table.is_started else 0}"
                 self.send_message(message, client)
 
+    # Wyślij informację o wszystkich graczach
     def send_players(self, table):
         message = "PlayersList"
         for player in table.players:
@@ -133,11 +142,29 @@ class Server:
             if client.current_menu == f"Game;{table.id}":
                 self.send_message(message, client)
 
+    # Roześlij informację o rozpoczęciu gry
+    def start_game(self, id):
+        my_table = None
+        for table in self.tables:
+            if str(table.id) == id:
+                my_table = table
+        
+        for client in self.clients:
+            if client.current_menu == "ChooseTableMenu":
+                message = f"StartTable;{my_table.id}"
+                self.send_message(message, client)
 
+        message = "StartGame"
+        for player in my_table.players:
+            self.send_message(message, player)
+
+
+    # Wyślij wiadomość do klienta
     def send_message(self, message: str, c: Client):
         print(f"Sending response to {c.client_socket} stating \"{message}\"")
         c.client_socket.sendall((str(message)+"$").encode())
 
+    # Wyświetl przychodzącą wiadomość
     def print_coming_message(self, message, c: Client):
         print(f"Got response from {c.client_socket} stating \"{message}\"")
 

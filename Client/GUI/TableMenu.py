@@ -1,6 +1,7 @@
 from GUI.UIComponents import draw_text, Button
-import pygame as pg
 from GUI.Menu import Menu
+from GUI.GameMenu import GameMenu
+import pygame as pg
 import SETTINGS as S
 from Player import Player
 
@@ -56,16 +57,18 @@ class TableMenu(Menu):
         while self.table_alive:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
+                    if self.owner:
+                        self.gui.client.delete_table(self.table)
+                    else:
+                        self.gui.client.leave_table(self.table)
                     self.close_program()
-                    # TODO informacja ze opuszcza stolik
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         if self.owner:
                             if self.delete_button.rect.collidepoint(event.pos):
                                 self.gui.client.delete_table(self.table)
-                            if self.start_button.rect.collidepoint(event.pos):
-                                # TODO rozpoczecie rozgrywki
-                                pass
+                            if self.start_button.rect.collidepoint(event.pos) and self.start_button.active:
+                                self.gui.client.start_game(self.table)
                         else:
                             if self.leave_button.rect.collidepoint(event.pos):
                                 self.gui.client.leave_table(self.table)
@@ -75,7 +78,6 @@ class TableMenu(Menu):
             self.check_server()
 
     def draw(self):
-        self.reinitialize_menu() if self.reinitialize else None
         screen = self.gui.screen
         clock = self.gui.clock
         text_font = self.gui.text_font
@@ -101,6 +103,12 @@ class TableMenu(Menu):
                     player_sprite = PlayerItem(player, self.gui.xs_font, self.rect_width, self.pe_height)
                     player_sprite.rect = player_rect
                     self.player_sprites.append(player_sprite)
+                
+                if self.owner:
+                    if len(self.table.players) > 1:
+                        self.start_button.active = True
+                    else:
+                        self.start_button.active = False
             self.refresh_players = False
 
         for sprite in self.player_sprites:
@@ -114,7 +122,8 @@ class TableMenu(Menu):
         # Sprawdzenie najechania myszką
         mouse_pos = pg.mouse.get_pos()
         for button in self.buttons:
-            button.check_hover(mouse_pos)
+            if button.active:
+                button.check_hover(mouse_pos)
 
     def check_server(self):
         while not self.gui.message_queue.empty():
@@ -126,12 +135,15 @@ class TableMenu(Menu):
                 for i in range(len(splitted)//2):
                     id = splitted[i * 2]
                     name = splitted[i * 2 + 1]
-                    self.table.players.append(Player(id, name))
+                    self.table.players.append(Player(id, name, S.PLAYER_COLORS[len(self.table.players)]))
                 self.refresh_players = True
-            elif message == "TableDeleted":
+            elif message == "DeletedTable":
+                self.table_alive = False
+            elif message == "StartGame":
+                GameMenu(self.gui, self.table, self.owner)
                 self.table_alive = False
             else:
-                print(f"Unhandled message \"{message}\"")
+                print(f"Unhandled message \"{message}\"") if S.DEBUG else None
 
             
     def close_program(self):

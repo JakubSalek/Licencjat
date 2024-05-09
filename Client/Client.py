@@ -48,6 +48,10 @@ class Client(threading.Thread):
         message = f"DeleteTable;{table.id}"
         self.client_socket.sendall(message.encode())
 
+    def start_game(self, table):
+        message = f"StartGame;{table.id}"
+        self.client_socket.sendall(message.encode())
+
     def send_menu(self, menu):
         message = menu
         self.client_socket.sendall(message.encode())

@@ -3,3 +3,4 @@ class Table:
         self.id = id
         self.name = f"{owner.nickname}'s table"
         self.players = [owner]
+        self.is_started = False

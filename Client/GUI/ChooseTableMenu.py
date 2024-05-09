@@ -17,7 +17,7 @@ class TableItem():
         self.rect = self.surface.get_rect()
         self.button = Button(self.swidth*0.75, self.sheight*0.25, self.swidth*0.15, self.sheight*0.5,
                             "Join", self.font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
-        if self.table.curr_players == "4":
+        if self.table.curr_players == "4" or self.table.is_started:
             self.button.active = False
 
     def draw(self):
@@ -60,6 +60,8 @@ class ChooseTableMenu(Menu):
         self.scrollable_height = len(self.tables) * self.te_height - S.SCREEN_HEIGHT*9/12
 
     def run(self):
+        self.tables = []
+        self.refresh_tables = True
         self.gui.client.send_menu("ChooseTableMenu")
 
         while True:
@@ -73,6 +75,7 @@ class ChooseTableMenu(Menu):
                         if self.create_button.rect.collidepoint(event.pos):
                             self.gui.client.create_table()
                         elif self.back_button.rect.collidepoint(event.pos):
+                            self.gui.client.send_menu("NONEED")
                             return
                         else:
                             for sprite in self.sprite_items:
@@ -175,7 +178,7 @@ class ChooseTableMenu(Menu):
             message: str = self.gui.message_queue.get_nowait()
             
             if message.startswith("Table"):
-                _, id, name, curr_players = message.split(";")
+                _, id, name, curr_players, started = message.split(";")
                 found = False
                 for table in self.tables:
                     if table.id == id:
@@ -183,12 +186,12 @@ class ChooseTableMenu(Menu):
                         table.curr_players = curr_players
                         found = True
                 if not found:
-                    self.tables.append(Table(id, name, curr_players))
+                    self.tables.append(Table(id, name, curr_players, int(started)))
                 self.scrollable_height = len(self.tables) * self.te_height - S.SCREEN_HEIGHT*9/12
                 self.refresh_tables = True
             elif message.startswith("CreateTable"):
                 _, id, name = message.split(";")
-                my_table = Table(id, name, 1)
+                my_table = Table(id, name, 1, False)
                 my_table.players = [Player(self.gui.client.id, self.gui.client.nickname)]
                 TableMenu(self.gui, my_table, True)
                 self.clear_and_ask()
@@ -199,8 +202,15 @@ class ChooseTableMenu(Menu):
                         self.tables.remove(table)
                         self.refresh_tables = True
                         break
+            elif message.startswith("StartTable"):
+                _, id = message.split(";")
+                for table in self.tables:
+                    if table.id == id:
+                        table.is_started = True
+                        self.refresh_tables = True
+                        break
             else:
-                print(f"Unhandled message \"{message}\"")
+                print(f"Unhandled message \"{message}\"") if S.DEBUG else None
 
     def clear_and_ask(self):
         self.tables = []
