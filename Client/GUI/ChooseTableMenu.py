@@ -192,7 +192,7 @@ class ChooseTableMenu(Menu):
             elif message.startswith("CreateTable"):
                 _, id, name = message.split(";")
                 my_table = Table(id, name, 1, False)
-                my_table.players = [Player(self.gui.client.id, self.gui.client.nickname)]
+                my_table.players = [Player(self.gui.client.id, self.gui.client.nickname, S.PLAYER_COLORS[0])]
                 TableMenu(self.gui, my_table, True)
                 self.clear_and_ask()
             elif message.startswith("DeleteTable"):
