@@ -1,5 +1,7 @@
 import socket
+import random
 import threading
+import SETTINGS as S
 from Client import Client
 from Table import Table
 
@@ -60,7 +62,15 @@ class Server:
             elif response.startswith("StartGame"):
                 _, id = response.split(";")
                 self.start_game(id)
-        
+            elif response.startswith("ThrowDice"):
+                _, table_id, player_id = response.split(";")
+                self.throw_dice(table_id, player_id)
+            elif response.startswith("Card"):
+                _, material, table_id, player_id, count = response.split(";")
+                self.change_material(table_id, player_id, material, count)
+            elif response.startswith("EndTurn"):
+                self.next_turn(table_id)
+
             elif response == "ChooseTableMenu":
                 c.current_menu = response
                 self.send_tables(c)
@@ -157,6 +167,41 @@ class Server:
         message = "StartGame"
         for player in my_table.players:
             self.send_message(message, player)
+
+    def throw_dice(self, table_id, player_id):
+        # Rzut kostką
+        move = random.randint(1, 6)
+
+        message = f"DiceThrown;{player_id};{move}"
+        for client in self.clients:
+            if client.current_menu == f"Game;{table_id}":
+                self.send_message(message, client)
+
+        # Losowanie karty
+        with open(S.CARDS, 'r', encoding='utf-8') as plik:
+            lines = plik.readlines()
+            
+            self.chosen_line = random.randint(0, len(lines) - 1)
+            random_card = lines[self.chosen_line]
+        
+        message = "Card;" + random_card.strip()
+        for client in self.clients:
+            if client.current_menu == f"Game;{table_id}":
+                self.send_message(message, client)
+
+    def change_material(self, table_id, player_id, material, count):
+        message = f"ChangeMaterial;{player_id};{material};{count}"
+
+        for client in self.clients:
+            if client.current_menu == f"Game;{table_id}":
+                self.send_message(message, client)
+
+    def next_turn(self, table_id):
+        message = f"NextTurn"
+
+        for client in self.clients:
+            if client.current_menu == f"Game;{table_id}":
+                self.send_message(message, client)
 
 
     # Wyślij wiadomość do klienta

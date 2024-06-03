@@ -34,6 +34,7 @@ FULLSCREEN = False
 # Pliki pomocnicze
 HOW_TO_FILE = "Client\\TextFiles\\how_to_play.txt"
 FONT = "Client\\Fonts\\arial.ttf"
+CARDS = "Client\\TextFiles\\cards.txt"
 
 # Ustawienia gry
 TILE_COUNT = 100

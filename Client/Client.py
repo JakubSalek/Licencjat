@@ -59,6 +59,24 @@ class Client(threading.Thread):
     def send_disconnect(self):
         self.client_socket.sendall("Disconnect".encode())
 
+    def throw_dice(self, table):
+        message = f"ThrowDice;{table.id};{self.id}"
+        self.client_socket.sendall(message.encode())
+
+    def card_confirm(self, table, card):
+        if card.card_type == "GAIN":
+            message = f"Card;Gold;{table.id};{self.id};{card.count}"
+        elif card.card_type == "MOVE":
+            message = f"Card;Progress;{table.id};{self.id};{card.count}"
+
+        self.client_socket.sendall(message.encode())
+
+        self.client_socket.sendall("EndTurn".encode())
+
+    def attack_player(self, table, player_id, card):
+        if card.card_type == "ATTACK":
+            pass
+
     def run(self):
         self.is_running = True
         while self.is_running:

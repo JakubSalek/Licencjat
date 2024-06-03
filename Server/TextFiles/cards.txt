@@ -1,0 +1,20 @@
+GAIN;Treasure I;You found little treasure and got 1 gold;1
+GAIN;Treasure II;You found small treasure and got 2 gold;2
+GAIN;Treasure III;You found average treasure and got 3 gold;3
+GAIN;Treasure IV;You found big treasure and got 4 gold;4
+GAIN;Treasure V;You found huge treasure and got 5 gold;5
+GAIN;Thieves I; You were attacked and lost 1 gold!;-1
+GAIN;Thieves II; You were attacked and lost 2 gold!;-2
+GAIN;Thieves III; You were attacked and lost 3 gold!;-3
+GAIN;Thieves IV; You were attacked and lost 4 gold!;-4
+GAIN;Thieves V; You were attacked and lost 5 gold!;-5
+MOVE;Good Winds I;Wind is at your luck! Move 1 tile forward;1
+MOVE;Good Winds II;Wind is at your luck! Move 2 tiles forward;2
+MOVE;Good Winds III;Wind is at your luck! Move 3 tiles forward;3
+MOVE;Good Winds IV;Wind is at your luck! Move 4 tiles forward;4
+MOVE;Good Winds V;Wind is at your luck! Move 5 tiles forward;5
+MOVE;Bad Winds I;Wind is your curse! Move 1 tile backwards;-1
+MOVE;Bad Winds II;Wind is your curse! Move 2 tiles backwards;-2
+MOVE;Bad Winds III;Wind is your curse! Move 3 tiles backwards;-3
+MOVE;Bad Winds IV;Wind is your curse! Move 4 tiles backwards;-4
+MOVE;Bad Winds V;Wind is your curse! Move 5 tiles backwards;-5
