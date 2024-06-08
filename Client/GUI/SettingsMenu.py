@@ -18,17 +18,17 @@ class SettingsMenu(Menu):
 
         # Przyciski menu
         self.back_button = Button(S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5,
-                                S.SCREEN_HEIGHT/12, "Back", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                S.SCREEN_HEIGHT/12, "Back", button_font)
         self.save_button = Button(S.SCREEN_WIDTH*3/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5,
-                                S.SCREEN_HEIGHT/12, "Save", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                S.SCREEN_HEIGHT/12, "Save", button_font)
         self.resolution_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*8/20, self.arrow_width,
-                                            self.arrow_height, ">", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                            self.arrow_height, ">", button_font)
         self.resolution_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*8/20, self.arrow_width,
-                                            self.arrow_height, "<", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                            self.arrow_height, "<", button_font)
         self.fps_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*10/20, self.arrow_width,
-                                    self.arrow_height, ">", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                    self.arrow_height, ">", button_font)
         self.fps_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*10/20, self.arrow_width,
-                                    self.arrow_height, "<", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                    self.arrow_height, "<", button_font)
 
         # Checkbox
         self.fullscreen_checkbox = Checkbox(self.gui.screen, S.SCREEN_WIDTH*15/20, S.SCREEN_HEIGHT*6/20, self.arrow_height, S.GRAY, S.WHITE)
@@ -116,17 +116,17 @@ class SettingsMenu(Menu):
 
         # Przyciski menu
         self.back_button = Button(S.SCREEN_WIDTH/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5,
-                                S.SCREEN_HEIGHT/12, "Back", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                S.SCREEN_HEIGHT/12, "Back", button_font)
         self.save_button = Button(S.SCREEN_WIDTH*3/5, S.SCREEN_HEIGHT*11/13, S.SCREEN_WIDTH/5,
-                                S.SCREEN_HEIGHT/12, "Save", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                S.SCREEN_HEIGHT/12, "Save", button_font)
         self.resolution_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*8/20, self.arrow_width,
-                                            self.arrow_height, ">", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                            self.arrow_height, ">", button_font)
         self.resolution_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*8/20, self.arrow_width,
-                                            self.arrow_height, "<", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                            self.arrow_height, "<", button_font)
         self.fps_right_button = Button(S.SCREEN_WIDTH*18/20, S.SCREEN_HEIGHT*10/20, self.arrow_width,
-                                    self.arrow_height, ">", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                    self.arrow_height, ">", button_font)
         self.fps_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*10/20, self.arrow_width,
-                                    self.arrow_height, "<", button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                    self.arrow_height, "<", button_font)
 
         # Checkbox
         self.fullscreen_checkbox = Checkbox(self.gui.screen, S.SCREEN_WIDTH*15/20, S.SCREEN_HEIGHT*6/20, self.arrow_height, S.GRAY, S.WHITE)

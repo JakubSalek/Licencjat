@@ -1,1 +1,11 @@
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ut orci faucibus, fermentum erat feugiat, scelerisque tortor. Nulla et diam ullamcorper risus iaculis dictum id ut ante. Sed lobortis sem nec tellus blandit, ut rhoncus lacus convallis. Sed sed mi nec ante viverra lobortis. Donec rutrum, lacus vitae faucibus rhoncus, ligula lacus imperdiet mauris, eget laoreet neque nisi vel quam. Phasellus a urna arcu. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vivamus commodo leo quis maximus sollicitudin. Pellentesque ultricies quam ligula, vitae vestibulum est luctus vel. Donec nibh lorem, euismod a imperdiet et, congue eget dui. Etiam efficitur, turpis vitae congue volutpat, metus odio auctor leo, vel tincidunt erat tellus in risus. Maecenas condimentum diam vitae cursus scelerisque. Sed iaculis congue lacus vel rhoncus. 
+Welcome to the game "Gold & Treasures!".
+In the main menu please enter your nickname and click on the "Online game" option to see current tables.
+If you want you can join to an already existing one or create your own! When you are at the table with at least one player, the owner can start the game!
+
+How the game goes on:
+Each player has his own turn in an order. The turn start by throwing the die and moving checker on the board by the amount of dots on die.
+Than the player draws a card from a pile, there are various cards with different effects, some can give you boost and some can take away your gold or progress. There are also cards that let you attack another player!
+
+Game ends when one of the players reaches the last square of board. Then all of the players gain gold equal to the progress they made at that moment and you are shown your final score as well with your place on podium!
+
+Good luck and have fun!

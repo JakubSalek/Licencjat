@@ -3,12 +3,12 @@ import SETTINGS as S
 
 # Klasa przycisków
 class Button:
-    def __init__(self, x, y, width, height, text, font, normal_color, hover_color):
+    def __init__(self, x, y, width, height, text, font):
         self.rect = pg.Rect(x, y, width, height)
         self.text = text
         self.font = font
-        self.normal_color = normal_color
-        self.hover_color = hover_color
+        self.normal_color = S.BUTTON_COLOR
+        self.hover_color = S.BUTTON_HOVER_COLOR
         self.hovered = False
         self.active = True
 

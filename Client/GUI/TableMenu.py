@@ -35,13 +35,13 @@ class TableMenu(Menu):
 
         if self.owner:
             self.delete_button = Button(S.SCREEN_WIDTH*1/12, S.SCREEN_HEIGHT*10/12, self.buttons_width,
-                                self.buttons_height, "Delete Table", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                self.buttons_height, "Delete Table", self.gui.button_font)
             self.start_button = Button(S.SCREEN_WIDTH*7/12, S.SCREEN_HEIGHT*10/12, self.buttons_width,
-                                self.buttons_height, "Start Game", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                self.buttons_height, "Start Game", self.gui.button_font)
             self.buttons = [self.start_button, self.delete_button]
         else:
             self.leave_button = Button(S.SCREEN_WIDTH*4/12, S.SCREEN_HEIGHT*10/12, self.buttons_width,
-                                self.buttons_height, "Leave", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                self.buttons_height, "Leave", self.gui.button_font)
             self.buttons = [self.leave_button]
 
         self.rect_width = S.SCREEN_WIDTH*0.9

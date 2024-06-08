@@ -16,7 +16,7 @@ class TableItem():
         self.font = font
         self.rect = self.surface.get_rect()
         self.button = Button(self.swidth*0.75, self.sheight*0.25, self.swidth*0.15, self.sheight*0.5,
-                            "Join", self.font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                            "Join", self.font)
         if self.table.curr_players == "4" or self.table.is_started:
             self.button.active = False
 
@@ -43,9 +43,9 @@ class ChooseTableMenu(Menu):
 
         # Przyciski menu
         self.back_button = Button(S.SCREEN_WIDTH*1/12, S.SCREEN_HEIGHT*10/12, self.buttons_width,
-                                self.buttons_height, "Back", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                self.buttons_height, "Back", self.gui.button_font)
         self.create_button = Button(S.SCREEN_WIDTH*7/12, S.SCREEN_HEIGHT*10/12, self.buttons_width,
-                                self.buttons_height, "Create Table", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                self.buttons_height, "Create Table", self.gui.button_font)
         
         self.rect_width = S.SCREEN_WIDTH*0.9
         self.rect_height = S.SCREEN_HEIGHT*9//12
@@ -156,9 +156,9 @@ class ChooseTableMenu(Menu):
 
         # Przyciski menu
         self.back_button = Button(S.SCREEN_WIDTH*1/12, S.SCREEN_HEIGHT*10/12, self.buttons_width,
-                                self.buttons_height, "Back", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                self.buttons_height, "Back", self.gui.button_font)
         self.create_button = Button(S.SCREEN_WIDTH*7/12, S.SCREEN_HEIGHT*10/12, self.buttons_width,
-                                self.buttons_height, "Create Table", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                self.buttons_height, "Create Table", self.gui.button_font)
         
         self.rect_width = S.SCREEN_WIDTH*0.9
         self.rect_height = S.SCREEN_HEIGHT*9//12

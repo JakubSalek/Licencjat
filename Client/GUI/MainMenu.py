@@ -20,13 +20,13 @@ class MainMenu(Menu):
 
         # Przyciski menu
         self.play_button = Button(self.first_pos_x, self.first_pos_y, self.buttons_width, self.buttons_height,
-                                "Online Game", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                "Online Game", self.gui.button_font)
         self.settings_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding, self.buttons_width, self.buttons_height,
-                                "Settings", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                "Settings", self.gui.button_font)
         self.how_to_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 2, self.buttons_width, self.buttons_height,
-                                "How to play", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                "How to play", self.gui.button_font)
         self.quit_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 3, self.buttons_width, self.buttons_height,
-                                "Quit", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                "Quit", self.gui.button_font)
 
         # Zmienne do pola na wpisywanie
         self.ibox_x = S.SCREEN_WIDTH * 3 / 5
@@ -145,13 +145,13 @@ class MainMenu(Menu):
 
         # Przyciski menu
         self.play_button = Button(self.first_pos_x, self.first_pos_y, self.buttons_width, self.buttons_height,
-                                "Online Game", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                "Online Game", self.gui.button_font)
         self.settings_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding, self.buttons_width, self.buttons_height,
-                                "Settings", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                "Settings", self.gui.button_font)
         self.how_to_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 2, self.buttons_width, self.buttons_height,
-                                "How to play", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                "How to play", self.gui.button_font)
         self.quit_button = Button(self.first_pos_x, self.first_pos_y + self.buttons_padding * 3, self.buttons_width, self.buttons_height,
-                                "Quit", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                "Quit", self.gui.button_font)
 
         # Zmienne do pola na wpisywanie
         self.ibox_x = S.SCREEN_WIDTH * 3 / 5

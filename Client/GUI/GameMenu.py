@@ -83,8 +83,7 @@ class GameMenu(Menu):
         # Przyciski
         self.move_button = Button((S.TILES_ROW - 1) * self.tile_width + self.tile_width * 0.1,
                                     (S.TILES_COL - 1) * self.tile_height + self.tile_height * 0.4,
-                                    self.tile_width * 0.8, self.tile_height * 0.5, "Move", self.gui.xs_font,
-                                    S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                    self.tile_width * 0.8, self.tile_height * 0.5, "Move", self.gui.xs_font)
         self.buttons.append(self.move_button)
 
         # Scroll planszy
@@ -105,29 +104,23 @@ class GameMenu(Menu):
         # Dice button
         self.dice_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.5,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.3, "Throw", self.gui.button_font,
-                                  S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.3, "Throw", self.gui.button_font)
         # Card buttons
         self.confirm_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.2,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.6, "Confirm", self.gui.button_font,
-                                  S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.6, "Confirm", self.gui.button_font)
         self.player_one_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.1,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player One", self.gui.button_font,
-                                  S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player One", self.gui.button_font)
         self.player_two_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.3,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Two", self.gui.button_font,
-                                  S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Two", self.gui.button_font)
         self.player_three_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.5,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Three", self.gui.button_font,
-                                  S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Three", self.gui.button_font)
         self.player_four_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.7,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Four", self.gui.button_font,
-                                  S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Four", self.gui.button_font)
         self.players_buttons = [self.player_one_button, self.player_two_button, self.player_three_button, self.player_four_button]
         for button in self.players_buttons:
             button.active = False
@@ -138,8 +131,7 @@ class GameMenu(Menu):
                                 self.mrect_width, self.mrect_height)
         self.end_game_button = Button(self.finish_rect.left + self.mrect_width*0.1,
                                   self.choice_rect.top + self.mrect_height*0.8,
-                                  self.mrect_width*0.8, self.mrect_height*0.15, "Leave Game", self.gui.button_font,
-                                  S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                  self.mrect_width*0.8, self.mrect_height*0.15, "Leave Game", self.gui.button_font)
         self.end_game_button.active = False
 
 
@@ -150,10 +142,7 @@ class GameMenu(Menu):
         while self.table_alive:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    if self.owner:
-                        self.gui.client.delete_table(self.table)
-                    else:
-                        self.gui.client.leave_table(self.table)
+                    self.gui.client.delete_table(self.table)
                     self.close_program()
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if event.button == 1:

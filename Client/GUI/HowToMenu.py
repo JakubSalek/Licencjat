@@ -9,7 +9,7 @@ class HowToMenu(Menu):
     def __init__(self, gui):
         super().__init__(gui)    
         self.back_button = Button(S.SCREEN_WIDTH/4, S.SCREEN_HEIGHT*7/8, S.SCREEN_WIDTH/2,
-                                S.SCREEN_HEIGHT/12, "Back", self.gui.button_font, S.BUTTON_COLOR, S.BUTTON_HOVER_COLOR)
+                                S.SCREEN_HEIGHT/12, "Back", self.gui.button_font)
   
         # Zmienne do przewijanego tekstu
         self.text = read_text_from_file(S.HOW_TO_FILE)
@@ -20,7 +20,9 @@ class HowToMenu(Menu):
         self.scroll = 0
         self.button_scroll_speed = 5
         self.mouse_scroll_speed = self.button_scroll_speed * 10
-        self.text_rect = pg.Rect((S.SCREEN_WIDTH - self.text_area_width) // 2, (S.SCREEN_HEIGHT - self.text_area_height) // 2, self.text_area_width, self.text_area_height)
+        self.text_rect = pg.Rect((S.SCREEN_WIDTH - self.text_area_width) // 2,
+                                  (S.SCREEN_HEIGHT - self.text_area_height) // 2,
+                                    self.text_area_width, self.text_area_height)
 
     def run(self):
         # Główna pętla menu
@@ -79,12 +81,14 @@ class HowToMenu(Menu):
 
 
     def reinitialize_menu(self):
-        self.back_button = Button(S.SCREEN_WIDTH/4, S.SCREEN_HEIGHT*7/8, S.SCREEN_WIDTH/2, S.SCREEN_HEIGHT/12, "Back", self.gui.button_font, S.GRAY, S.WHITE)
-  
+        self.back_button = Button(S.SCREEN_WIDTH/4, S.SCREEN_HEIGHT*7/8, S.SCREEN_WIDTH/2,
+                                S.SCREEN_HEIGHT/12, "Back", self.gui.button_font)
         # Zmienne do przewijanego tekstu
         self.text_area_width = S.SCREEN_WIDTH*4/5
         self.text_area_height = S.SCREEN_HEIGHT*9/15
-        self.text_rect = pg.Rect((S.SCREEN_WIDTH - self.text_area_width) // 2, (S.SCREEN_HEIGHT - self.text_area_height) // 2, self.text_area_width, self.text_area_height)
+        self.text_rect = pg.Rect((S.SCREEN_WIDTH - self.text_area_width) // 2,
+                                  (S.SCREEN_HEIGHT - self.text_area_height) // 2,
+                                    self.text_area_width, self.text_area_height)
 
         self.reinitialize = False
 
