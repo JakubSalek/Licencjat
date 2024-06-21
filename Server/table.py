@@ -4,3 +4,12 @@ class Table:
         self.name = f"{owner.nickname}'s table"
         self.players = [owner]
         self.is_started = False
+
+    def get_id(self):
+        return self.id
+    
+    def get_name(self):
+        return self.name
+    
+    def get_players(self):
+        return self.players

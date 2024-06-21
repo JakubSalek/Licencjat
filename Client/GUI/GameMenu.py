@@ -36,8 +36,8 @@ class PlayerItem:
     def draw(self):
         self.surface.fill(self.player.color)
         draw_text(self.surface, self.player.nickname, S.BLACK, self.swidth//2, self.sheight * 0.2, self.font, True)
-        draw_text(self.surface, f"Gold: {self.player.gold}", S.BLACK, self.swidth//2, self.sheight * 0.45, self.font, True)
-        draw_text(self.surface, f"Goal: {self.player.progress+1}/{S.TILE_COUNT}", S.BLACK, self.swidth//2, self.sheight * 0.75, self.font, True)
+        draw_text(self.surface, f"Gold: {self.player.get_gold()}", S.BLACK, self.swidth//2, self.sheight * 0.45, self.font, True)
+        draw_text(self.surface, f"Goal: {self.player.get_progress()+1}/{S.TILE_COUNT}", S.BLACK, self.swidth//2, self.sheight * 0.75, self.font, True)
 
 
 class GameMenu(Menu):
@@ -50,6 +50,8 @@ class GameMenu(Menu):
         self.table_alive = True
         self.show_move = True
         self.dice_throw = True
+        self.end_turn = False
+        self.attacked_players = 0
         self.game_finished = False
         self.given_rewards = False
         self.current_card = Card(["NONE", "Error", "Something went wrong!"])
@@ -124,6 +126,7 @@ class GameMenu(Menu):
         self.players_buttons = [self.player_one_button, self.player_two_button, self.player_three_button, self.player_four_button]
         for button in self.players_buttons:
             button.active = False
+        self.confirm_button.active = False
 
 
         # Finish screen variables
@@ -155,22 +158,19 @@ class GameMenu(Menu):
                             self.gui.client.card_confirm(self.table, self.current_card)
                             self.confirm_button.active = False
                         if self.my_move and not self.dice_throw and self.player_one_button.active and self.player_one_button.rect.collidepoint(event.pos):
-                            
-                            self.player_one_button.active = False
+                            self.gui.client.attack_player(self.table, self.table.players[0].id, self.current_card)
+                            self.attack_player()
                         if self.my_move and not self.dice_throw and self.player_two_button.active and  self.player_two_button.rect.collidepoint(event.pos):
-                            
-                            self.player_two_button.active = False
+                            self.gui.client.attack_player(self.table, self.table.players[1].id, self.current_card)
+                            self.attack_player()
                         if self.my_move and not self.dice_throw and self.player_three_button.active and  self.player_three_button.rect.collidepoint(event.pos):
-                            
-                            self.player_three_button.active = False
+                            self.gui.client.attack_player(self.table, self.table.players[2].id, self.current_card)
+                            self.attack_player()
                         if self.my_move and not self.dice_throw and self.player_four_button.active and  self.player_four_button.rect.collidepoint(event.pos):
-                            
-                            self.player_four_button.active = False
+                            self.gui.client.attack_player(self.table, self.table.players[3].id, self.current_card)
+                            self.attack_player()
                         if self.game_finished and self.end_game_button.active and self.end_game_button.rect.collidepoint(event.pos):
-                            if self.owner:
-                                self.gui.client.delete_table(self.table)
-                            else:
-                                self.gui.client.leave_table(self.table)
+                            self.gui.client.delete_table(self.table)
                     elif event.button == 4:
                         if self.show_move:
                             self.card_scroll -= self.card_mouse_scroll_speed if self.card_scroll > 0 else 0
@@ -195,6 +195,14 @@ class GameMenu(Menu):
 
             self.draw()
             self.check_server()
+            if self.end_turn:
+                self.end_turn = False
+                self.gui.client.end_turn()
+
+    def attack_player(self):
+        self.attacked_players += 1
+        if self.attacked_players >= self.current_card.player_count:
+            self.end_turn = True
 
     def draw_move(self, screen):
         # Rysowanie karty
@@ -248,12 +256,10 @@ class GameMenu(Menu):
     def draw_finish_screen(self, screen):
         pg.draw.rect(screen, S.BLACK, self.finish_rect)
         pg.draw.rect(screen, S.WHITE, self.finish_rect, 2)
-
         for i, player in enumerate(self.sorted_players):
-            text = f"{player.nickname} - Gold: {player.gold} - Goal: {player.progress}"
+            text = f"{player.nickname} - Gold: {player.get_gold()} - Goal: {player.get_progress()+1}"
             draw_text(screen, text, player.color, self.finish_rect.left + self.mrect_width*0.5,
                       self.finish_rect.top + self.mrect_height*(0.1 + i * 0.2), self.gui.text_font, True)
-            
         self.end_game_button.draw(screen)
         mouse_pos = pg.mouse.get_pos()
         self.end_game_button.check_hover(mouse_pos)
@@ -277,7 +283,7 @@ class GameMenu(Menu):
                                             self.tiles_rect.top + (i // S.TILES_ROW) * self.tile_height - self.board_scroll)
                 players = []
                 for player in self.table.players:
-                    if player.progress == i:
+                    if player.get_progress() == i:
                         players.append(player)
                 tile_sprite.draw(players)
                 screen.blit(tile_sprite.surface, tile_sprite.rect.topleft)
@@ -298,10 +304,9 @@ class GameMenu(Menu):
         if self.game_finished:
             if not self.given_rewards:
                 for player in self.table.players:
-                    player.change_gold(player.progress)
+                    player.change_gold(player.get_progress())
                     self.given_rewards = True
-
-            self.sorted_players = sorted(self.table.players, key=lambda player: (player.gold, player.progress), reverse=True)
+                    self.sorted_players = sorted(self.table.players, key=lambda player: (player.gold, player.progress), reverse=True)
 
             self.show_move = False
             for button in self.buttons:
@@ -360,8 +365,9 @@ class GameMenu(Menu):
                 if self.current_card.card_type == "GAIN" or self.current_card.card_type == "MOVE":
                     self.confirm_button.active = True
                 elif self.current_card.card_type == "ATTACK":
-                    for button in self.players_buttons:
-                        button.active = True
+                    self.attacked_players = 0
+                    for i, player in enumerate(self.table.players):
+                        self.players_buttons[i].active = True
 
             elif message.startswith("ChangeMaterial"):
                 _, player_id, material, count = message.split(";")
@@ -375,6 +381,11 @@ class GameMenu(Menu):
             elif message == "NextTurn":
                 self.current_card.clear_card()
                 
+                
+                self.confirm_button.active = False
+                for button in self.players_buttons:
+                    button.active = False
+
                 self.moving_player += 1
                 if self.moving_player == len(self.table.players):
                     self.moving_player = 0

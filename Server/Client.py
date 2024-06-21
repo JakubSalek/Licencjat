@@ -5,3 +5,9 @@ class Client:
         self. client_address = client_address
         self.nickname = ''
         self.current_menu = "NONEED"
+
+    def get_id(self):
+        return self.id
+    
+    def get_client_socket(self):
+        return self.client_socket

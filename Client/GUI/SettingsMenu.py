@@ -2,7 +2,6 @@ from GUI.UIComponents import draw_text, Button, Checkbox
 from GUI.Menu import Menu
 import pygame as pg
 import SETTINGS as S
-import sys
 
 class SettingsMenu(Menu):
     def __init__(self, gui):

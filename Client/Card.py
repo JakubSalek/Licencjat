@@ -10,11 +10,13 @@ class Card:
         self.amount_taken = 0
         self.amount_received = 0
         self.count = 0
+        self.attack_material = ""
 
         if self.card_type == "ATTACK":
-            self.player_count = splitted[3]
+            self.player_count = int(splitted[3])
             self.amount_taken = splitted[4]
             self.amount_received = splitted[5]
+            self.attack_material = splitted[6]
         elif self.card_type == "GAIN":
             self.count = splitted[3]
         elif self.card_type == "MOVE":
@@ -28,3 +30,4 @@ class Card:
         self.amount_taken = 0
         self.amount_received = 0
         self.count = 0
+        self.attack_material = ""

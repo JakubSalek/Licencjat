@@ -18,3 +18,13 @@ MOVE;Bad Winds II;Wind is your curse! Move 2 tiles backwards;-2
 MOVE;Bad Winds III;Wind is your curse! Move 3 tiles backwards;-3
 MOVE;Bad Winds IV;Wind is your curse! Move 4 tiles backwards;-4
 MOVE;Bad Winds V;Wind is your curse! Move 5 tiles backwards;-5
+ATTACK;Cannoneer;Attacks 3 players, takes 4 Gold, and receives 3 Gold. Fire a broadside at the enemy ship, causing significant damage and taking valuable loot.;3;-4;3;Gold
+ATTACK;Swashbuckler;Attacks 2 players, takes 2 Gold, and receives 2 Gold. Swing aboard the enemy vessel, engaging in close combat to plunder their supplies.;2;-2;2;Gold
+ATTACK;Treasure Hunter;Attacks 1 player, takes 5 Gold, and receives 4 Gold. Locate hidden treasures on the enemy's island, bringing back a hefty bounty.;1;-5;4;Gold
+ATTACK;Navigator;Attacks 4 players, takes 3 Progress, and receives 2 Progress. Steal the enemy's map, redirecting their course and gaining an advantage.;4;-3;2;Progress
+ATTACK;Shipwright;Attacks 2 players, takes 3 Progress, and receives 3 Progress. Sabotage the enemy's ship, causing them to lose materials while you gain supplies.;2;-3;3;Progress
+ATTACK;First Mate;Attacks 3 players, takes 4 Gold, and receives 2 Gold. Lead a boarding party to take control of the enemy ship's deck and seize goods.;3;-4;2;Gold
+ATTACK;Quartermaster;Attacks 4 players, takes 5 Gold, and receives 1 Gold. Confiscate the enemy's cargo, ensuring a substantial haul for your crew.;4;-5;1;Gold
+ATTACK;Corsair;Attacks 3 players, takes 3 Gold, and receives 3 Gold. Launch a daring raid on the enemy's port, capturing valuable resources.;3;-3;3;Gold
+ATTACK;Deckhand;Attacks 1 player, takes 1 Progress, and receives 2 Progress. Disrupt the enemy's operations, causing minor losses but gaining useful tools.;1;-1;2;Progress
+ATTACK;Helmsman;Attacks 2 players, takes 2 Progress, and receives 1 Progress. Maneuver your ship into an advantageous position, forcing the enemy to retreat and leaving behind supplies.;2;-2;1;Progress

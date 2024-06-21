@@ -71,11 +71,18 @@ class Client(threading.Thread):
 
         self.client_socket.sendall(message.encode())
 
-        self.client_socket.sendall("EndTurn".encode())
+        self.end_turn()
 
     def attack_player(self, table, player_id, card):
         if card.card_type == "ATTACK":
-            pass
+            message = f"Card;{card.attack_material};{table.id};{player_id};{card.amount_taken}"
+            self.client_socket.sendall(message.encode())
+            message = f"Card;{card.attack_material};{table.id};{self.id};{card.amount_received}"
+            self.client_socket.sendall(message.encode())
+
+
+    def end_turn(self):
+        self.client_socket.sendall("EndTurn".encode())
 
     def run(self):
         self.is_running = True

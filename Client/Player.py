@@ -15,7 +15,7 @@ class Player:
         if self.progress < 0:
             self.progress = 0
         
-        if self.progress > S.TILE_COUNT - 1:
+        if self.progress >= S.TILE_COUNT - 1:
             self.progress = S.TILE_COUNT - 1
             return True
         return False
@@ -25,3 +25,9 @@ class Player:
 
         if self.gold < 0:
             self.gold = 0
+
+    def get_progress(self):
+        return self.progress
+    
+    def get_gold(self):
+        return self.gold
