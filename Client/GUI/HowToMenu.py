@@ -2,7 +2,6 @@ from GUI.UIComponents import draw_text, Button, read_text_from_file, render_text
 import pygame as pg
 from GUI.Menu import Menu
 import SETTINGS as S
-import sys
 
 
 class HowToMenu(Menu):

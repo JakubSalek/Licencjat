@@ -1,5 +1,4 @@
 import pygame as pg
-import sys
 from GUI.Menu import Menu
 from GUI.SettingsMenu import SettingsMenu
 from GUI.HowToMenu import HowToMenu
