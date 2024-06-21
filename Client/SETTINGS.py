@@ -1,3 +1,5 @@
+import os
+
 # Server IP
 HOST = "127.0.0.1"
 PORT = 12345
@@ -32,9 +34,10 @@ CAN_FPS = [30, 60, 90, 120]
 FULLSCREEN = False
 
 # Pliki pomocnicze
-HOW_TO_FILE = "Client\\TextFiles\\how_to_play.txt"
-FONT = "Client\\Fonts\\arial.ttf"
-CARDS = "Client\\TextFiles\\cards.txt"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+HOW_TO_FILE = os.path.join(BASE_DIR, 'TextFiles', 'how_to_play.txt')
+FONT = os.path.join(BASE_DIR, 'Fonts', 'arial.ttf')
+CARDS = os.path.join(BASE_DIR, 'TextFiles', 'cards.txt')
 
 # Ustawienia gry
 TILE_COUNT = 100
