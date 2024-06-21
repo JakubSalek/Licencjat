@@ -237,9 +237,9 @@ class GameMenu(Menu):
                 card_type = self.current_card.card_type
                 if card_type == "ATTACK":
                     mouse_pos = pg.mouse.get_pos()
-                    for button in self.players_buttons:
-                        button.draw(screen)
-                        button.check_hover(mouse_pos)
+                    for i in range(len(self.table.players)):
+                        self.players_buttons[i].draw(screen)
+                        self.players_buttons[i].check_hover(mouse_pos)
                 elif card_type == "GAIN":
                     self.confirm_button.draw(screen)
                     mouse_pos = pg.mouse.get_pos()
