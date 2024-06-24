@@ -1,7 +1,7 @@
 import math
 from Card import Card
 from GUI.Menu import Menu
-from GUI.UIComponents import draw_text, Button, render_text_scrolled
+from Client.GUI.UIComponents.TextFunctions import draw_text, Button, render_text_scrolled
 import pygame as pg
 import SETTINGS as S
 
@@ -85,7 +85,7 @@ class GameMenu(Menu):
         # Przyciski
         self.move_button = Button((S.TILES_ROW - 1) * self.tile_width + self.tile_width * 0.1,
                                     (S.TILES_COL - 1) * self.tile_height + self.tile_height * 0.4,
-                                    self.tile_width * 0.8, self.tile_height * 0.5, "Move", self.gui.xs_font)
+                                    self.tile_width * 0.8, self.tile_height * 0.5, "Move", self.__gui.xs_font)
         self.buttons.append(self.move_button)
 
         # Scroll planszy
@@ -106,23 +106,23 @@ class GameMenu(Menu):
         # Dice button
         self.dice_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.5,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.3, "Throw", self.gui.button_font)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.3, "Throw", self.__gui.button_font)
         # Card buttons
         self.confirm_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.2,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.6, "Confirm", self.gui.button_font)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.6, "Confirm", self.__gui.button_font)
         self.player_one_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.1,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player One", self.gui.button_font)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player One", self.__gui.button_font)
         self.player_two_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.3,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Two", self.gui.button_font)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Two", self.__gui.button_font)
         self.player_three_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.5,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Three", self.gui.button_font)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Three", self.__gui.button_font)
         self.player_four_button = Button(self.choice_rect.left + self.mrect_width//2*0.1,
                                   self.choice_rect.top + self.mrect_height*0.7,
-                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Four", self.gui.button_font)
+                                  self.mrect_width//2*0.8, self.mrect_height*0.1, "Player Four", self.__gui.button_font)
         self.players_buttons = [self.player_one_button, self.player_two_button, self.player_three_button, self.player_four_button]
         for button in self.players_buttons:
             button.active = False
@@ -134,7 +134,7 @@ class GameMenu(Menu):
                                 self.mrect_width, self.mrect_height)
         self.end_game_button = Button(self.finish_rect.left + self.mrect_width*0.1,
                                   self.choice_rect.top + self.mrect_height*0.8,
-                                  self.mrect_width*0.8, self.mrect_height*0.15, "Leave Game", self.gui.button_font)
+                                  self.mrect_width*0.8, self.mrect_height*0.15, "Leave Game", self.__gui.button_font)
         self.end_game_button.active = False
 
 
@@ -145,32 +145,32 @@ class GameMenu(Menu):
         while self.table_alive:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    self.gui.client.delete_table(self.table)
+                    self.__gui.client.delete_table(self.table)
                     self.close_program()
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         if self.move_button.rect.collidepoint(event.pos):
                             self.show_move = not self.show_move
                         if self.my_move and self.dice_throw and self.dice_button.active and self.dice_button.rect.collidepoint(event.pos):
-                            self.gui.client.throw_dice(self.table)
+                            self.__gui.client.throw_dice(self.table)
                             self.dice_button.active = False
                         if self.my_move and not self.dice_throw and self.confirm_button.active and self.confirm_button.rect.collidepoint(event.pos):
-                            self.gui.client.card_confirm(self.table, self.current_card)
+                            self.__gui.client.card_confirm(self.table, self.current_card)
                             self.confirm_button.active = False
                         if self.my_move and not self.dice_throw and self.player_one_button.active and self.player_one_button.rect.collidepoint(event.pos):
-                            self.gui.client.attack_player(self.table, self.table.players[0].id, self.current_card)
+                            self.__gui.client.attack_player(self.table, self.table.players[0].id, self.current_card)
                             self.attack_player()
                         if self.my_move and not self.dice_throw and self.player_two_button.active and  self.player_two_button.rect.collidepoint(event.pos):
-                            self.gui.client.attack_player(self.table, self.table.players[1].id, self.current_card)
+                            self.__gui.client.attack_player(self.table, self.table.players[1].id, self.current_card)
                             self.attack_player()
                         if self.my_move and not self.dice_throw and self.player_three_button.active and  self.player_three_button.rect.collidepoint(event.pos):
-                            self.gui.client.attack_player(self.table, self.table.players[2].id, self.current_card)
+                            self.__gui.client.attack_player(self.table, self.table.players[2].id, self.current_card)
                             self.attack_player()
                         if self.my_move and not self.dice_throw and self.player_four_button.active and  self.player_four_button.rect.collidepoint(event.pos):
-                            self.gui.client.attack_player(self.table, self.table.players[3].id, self.current_card)
+                            self.__gui.client.attack_player(self.table, self.table.players[3].id, self.current_card)
                             self.attack_player()
                         if self.game_finished and self.end_game_button.active and self.end_game_button.rect.collidepoint(event.pos):
-                            self.gui.client.delete_table(self.table)
+                            self.__gui.client.delete_table(self.table)
                     elif event.button == 4:
                         if self.show_move:
                             self.card_scroll -= self.card_mouse_scroll_speed if self.card_scroll > 0 else 0
@@ -197,11 +197,11 @@ class GameMenu(Menu):
             self.check_server()
             if self.end_turn:
                 self.end_turn = False
-                self.gui.client.end_turn()
+                self.__gui.client.end_turn()
 
     def attack_player(self):
         self.attacked_players += 1
-        if self.attacked_players >= self.current_card.player_count:
+        if self.attacked_players >= self.current_card.__player_count:
             self.end_turn = True
 
     def draw_move(self, screen):
@@ -210,11 +210,11 @@ class GameMenu(Menu):
         pg.draw.rect(screen, S.WHITE, self.card_rect, 2)
 
         if not self.dice_throw:
-            draw_text(screen, self.current_card.name, S.WHITE,
+            draw_text(screen, self.current_card.__name, S.WHITE,
                       self.card_rect.left + self.mrect_width//4,
                       self.card_rect.top + self.mrect_height*0.15,
-                      self.gui.text_font, True)
-            render_text_scrolled(screen, self.gui.ibox_font, self.current_card.description,
+                      self.__gui.text_font, True)
+            render_text_scrolled(screen, self.__gui.ibox_font, self.current_card.__description,
                                 self.card_scroll, S.WHITE, self.card_line_spacing,
                                 self.card_text_rect, self.card_text_padding)
 
@@ -225,16 +225,16 @@ class GameMenu(Menu):
         if self.dice_throw:
             if self.my_move:
                 draw_text(screen, "Throw the dice:", S.WHITE, self.choice_rect.left + self.mrect_width//4,
-                           self.choice_rect.top + self.mrect_height*0.15, self.gui.text_font, True)
+                           self.choice_rect.top + self.mrect_height*0.15, self.__gui.text_font, True)
                 self.dice_button.draw(screen)
                 mouse_pos = pg.mouse.get_pos()
                 self.dice_button.check_hover(mouse_pos)
             else:
                 draw_text(screen, "Throwing the dice", S.WHITE, self.choice_rect.left + self.mrect_width//4,
-                           self.choice_rect.top + self.mrect_height*0.15, self.gui.text_font, True)
+                           self.choice_rect.top + self.mrect_height*0.15, self.__gui.text_font, True)
         else:
             if self.my_move:
-                card_type = self.current_card.card_type
+                card_type = self.current_card.__type
                 if card_type == "ATTACK":
                     mouse_pos = pg.mouse.get_pos()
                     for i in range(len(self.table.players)):
@@ -250,7 +250,7 @@ class GameMenu(Menu):
                     self.confirm_button.check_hover(mouse_pos)
             else:
                 draw_text(screen, "Player is choosing", S.WHITE, self.choice_rect.left + self.mrect_width//4,
-                           self.choice_rect.top + self.mrect_height*0.15, self.gui.text_font, True)
+                           self.choice_rect.top + self.mrect_height*0.15, self.__gui.text_font, True)
 
 
     def draw_finish_screen(self, screen):
@@ -259,15 +259,15 @@ class GameMenu(Menu):
         for i, player in enumerate(self.sorted_players):
             text = f"{player.nickname} - Gold: {player.get_gold()} - Goal: {player.get_progress()+1}"
             draw_text(screen, text, player.color, self.finish_rect.left + self.mrect_width*0.5,
-                      self.finish_rect.top + self.mrect_height*(0.1 + i * 0.2), self.gui.text_font, True)
+                      self.finish_rect.top + self.mrect_height*(0.1 + i * 0.2), self.__gui.text_font, True)
         self.end_game_button.draw(screen)
         mouse_pos = pg.mouse.get_pos()
         self.end_game_button.check_hover(mouse_pos)
 
 
     def draw(self):
-        screen = self.gui.screen
-        clock = self.gui.clock
+        screen = self.__gui.screen
+        clock = self.__gui.clock
         
         # Rysowanie menu
         screen.fill(S.BG_COLOR)
@@ -295,7 +295,7 @@ class GameMenu(Menu):
         for i, player in enumerate(self.table.players):
             player_rect = pg.Rect(self.players_rect.left + i * self.player_width, self.players_rect.top,
                                 self.player_width, self.prect_height)
-            player_sprite = PlayerItem(player, self.gui.xs_font, self.player_width, self.prect_height)
+            player_sprite = PlayerItem(player, self.__gui.xs_font, self.player_width, self.prect_height)
             player_sprite.rect = player_rect
             player_sprite.draw()
             screen.blit(player_sprite.surface, player_sprite.rect)
@@ -333,8 +333,8 @@ class GameMenu(Menu):
                 button.check_hover(mouse_pos)
 
     def check_server(self):
-        while not self.gui.message_queue.empty():
-            message: str = self.gui.message_queue.get_nowait()
+        while not self.__gui.message_queue.empty():
+            message: str = self.__gui.message_queue.get_nowait()
             if message.startswith("PlayersList"):
                 splitted = message.split(";")
                 splitted = splitted[1:]
@@ -362,9 +362,9 @@ class GameMenu(Menu):
                 splitted = message.split(";")
                 self.current_card = Card(splitted[1:])
 
-                if self.current_card.card_type == "GAIN" or self.current_card.card_type == "MOVE":
+                if self.current_card.__type == "GAIN" or self.current_card.__type == "MOVE":
                     self.confirm_button.active = True
-                elif self.current_card.card_type == "ATTACK":
+                elif self.current_card.__type == "ATTACK":
                     self.attacked_players = 0
                     for i, player in enumerate(self.table.players):
                         self.players_buttons[i].active = True
@@ -389,7 +389,7 @@ class GameMenu(Menu):
                 self.moving_player += 1
                 if self.moving_player == len(self.table.players):
                     self.moving_player = 0
-                if self.table.players[self.moving_player].id == self.gui.client.id:
+                if self.table.players[self.moving_player].id == self.__gui.client.id:
                     self.my_move = True
                     self.dice_button.active = True
                 else:

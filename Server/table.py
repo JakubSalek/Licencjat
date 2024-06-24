@@ -1,7 +1,7 @@
 class Table:
     def __init__(self, id, owner):
         self.__id = id
-        self.__name = f"{owner.nickname}'s table"
+        self.__name = f"{owner.get_nickname()}'s table"
         self.__players = [owner]
         self.__is_started = False
 

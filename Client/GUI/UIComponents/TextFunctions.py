@@ -1,45 +1,3 @@
-import pygame as pg
-import SETTINGS as S
-
-# Klasa przycisków
-class Button:
-    def __init__(self, x, y, width, height, text, font):
-        self.rect = pg.Rect(x, y, width, height)
-        self.text = text
-        self.font = font
-        self.normal_color = S.BUTTON_COLOR
-        self.hover_color = S.BUTTON_HOVER_COLOR
-        self.hovered = False
-        self.active = True
-
-    def draw(self, surface):
-        color = self.hover_color if self.hovered else self.normal_color
-        pg.draw.rect(surface, color, self.rect)
-        text_surface = self.font.render(self.text, True, S.BLACK)
-        text_rect = text_surface.get_rect(center=self.rect.center)
-        surface.blit(text_surface, text_rect)
-
-    def check_hover(self, pos):
-        self.hovered = self.rect.collidepoint(pos)
-
-# Klasa checkboxów
-class Checkbox:
-    def __init__(self, surface, x, y, size=20, color=(200, 200, 200), border_color=(0, 0, 0)):
-        self.surface = surface
-        self.rect = pg.Rect(x, y, size, size)
-        self.color = color
-        self.border_color = border_color
-        self.checked = False
-
-    def draw(self):
-        pg.draw.rect(self.surface, self.border_color, self.rect, 2)
-        if self.checked:
-            pg.draw.line(self.surface, self.border_color, self.rect.topleft, self.rect.bottomright, 2)
-            pg.draw.line(self.surface, self.border_color, self.rect.topright, self.rect.bottomleft, 2)
-
-    def toggle(self):
-        self.checked = not self.checked
-
 # Funkcja rysująca tekst zaczynając od lewego górnego punktu, wycentrowany do puntku
 def draw_text(surface, text, color, x, y, font, center: bool):
     text_surface = font.render(text, True, color)
@@ -67,7 +25,7 @@ def render_text_scrolled(screen, font, text, scroll, color, line_spacing, rect, 
                 screen.blit(rendered_line, text_rect.topleft)
             y_offset += rendered_line.get_height() + line_spacing
 
-# Dzieli zbyt długi tekst na mniejsze, rozdzielając je
+# Dzieli zbyt długi tekst na krótsze linijki
 def split_line_by_width(line, font, width):
     total_width = 0
     start_index = 0

@@ -1,4 +1,4 @@
-from GUI.UIComponents import draw_text, Button
+from GUI.UIComponents.TextFunctions import draw_text, Button
 from GUI.Menu import Menu
 from GUI.GameMenu import GameMenu
 import pygame as pg
@@ -35,13 +35,13 @@ class TableMenu(Menu):
 
         if self.owner:
             self.delete_button = Button(S.SCREEN_WIDTH*1/12, S.SCREEN_HEIGHT*10/12, self.buttons_width,
-                                self.buttons_height, "Delete Table", self.gui.button_font)
+                                self.buttons_height, "Delete Table", self.__gui.button_font)
             self.start_button = Button(S.SCREEN_WIDTH*7/12, S.SCREEN_HEIGHT*10/12, self.buttons_width,
-                                self.buttons_height, "Start Game", self.gui.button_font)
+                                self.buttons_height, "Start Game", self.__gui.button_font)
             self.buttons = [self.start_button, self.delete_button]
         else:
             self.leave_button = Button(S.SCREEN_WIDTH*4/12, S.SCREEN_HEIGHT*10/12, self.buttons_width,
-                                self.buttons_height, "Leave", self.gui.button_font)
+                                self.buttons_height, "Leave", self.__gui.button_font)
             self.buttons = [self.leave_button]
 
         self.rect_width = S.SCREEN_WIDTH*0.9
@@ -58,29 +58,29 @@ class TableMenu(Menu):
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     if self.owner:
-                        self.gui.client.delete_table(self.table)
+                        self.__gui.client.delete_table(self.table)
                     else:
-                        self.gui.client.leave_table(self.table)
+                        self.__gui.client.leave_table(self.table)
                     self.close_program()
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         if self.owner:
                             if self.delete_button.rect.collidepoint(event.pos):
-                                self.gui.client.delete_table(self.table)
+                                self.__gui.client.delete_table(self.table)
                             if self.start_button.rect.collidepoint(event.pos) and self.start_button.active:
-                                self.gui.client.start_game(self.table)
+                                self.__gui.client.start_game(self.table)
                         else:
                             if self.leave_button.rect.collidepoint(event.pos):
-                                self.gui.client.leave_table(self.table)
+                                self.__gui.client.leave_table(self.table)
                                 return
 
             self.draw()
             self.check_server()
 
     def draw(self):
-        screen = self.gui.screen
-        clock = self.gui.clock
-        text_font = self.gui.text_font
+        screen = self.__gui.screen
+        clock = self.__gui.clock
+        text_font = self.__gui.text_font
 
         # Rysowanie menu
         screen.fill(S.BG_COLOR)
@@ -100,7 +100,7 @@ class TableMenu(Menu):
                 player_rect = pg.Rect(self.players_rect.left, self.players_rect.top + i * self.pe_height,
                                     self.rect_width, self.pe_height)
                 if self.players_rect.contains(player_rect):
-                    player_sprite = PlayerItem(player, self.gui.xs_font, self.rect_width, self.pe_height)
+                    player_sprite = PlayerItem(player, self.__gui.xs_font, self.rect_width, self.pe_height)
                     player_sprite.rect = player_rect
                     self.player_sprites.append(player_sprite)
                 
@@ -126,8 +126,8 @@ class TableMenu(Menu):
                 button.check_hover(mouse_pos)
 
     def check_server(self):
-        while not self.gui.message_queue.empty():
-            message: str = self.gui.message_queue.get_nowait()
+        while not self.__gui.message_queue.empty():
+            message: str = self.__gui.message_queue.get_nowait()
             if message.startswith("PlayersList"):
                 splitted = message.split(";")
                 splitted = splitted[1:]
@@ -140,7 +140,7 @@ class TableMenu(Menu):
             elif message == "DeletedTable":
                 self.table_alive = False
             elif message == "StartGame":
-                GameMenu(self.gui, self.table, self.owner)
+                GameMenu(self.__gui, self.table, self.owner)
                 self.table_alive = False
             else:
                 print(f"Unhandled message \"{message}\"") if S.DEBUG else None

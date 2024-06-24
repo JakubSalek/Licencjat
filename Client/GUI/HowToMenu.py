@@ -1,27 +1,28 @@
-from GUI.UIComponents import draw_text, Button, read_text_from_file, render_text_scrolled
-import pygame as pg
+from GUI.UIComponents.TextFunctions import draw_text, read_text_from_file, render_text_scrolled
+from GUI.UIComponents.Button import Button
 from GUI.Menu import Menu
+import pygame as pg
 import SETTINGS as S
 
-
 class HowToMenu(Menu):
-    def __init__(self, gui):
-        super().__init__(gui)    
-        self.back_button = Button(S.SCREEN_WIDTH/4, S.SCREEN_HEIGHT*7/8, S.SCREEN_WIDTH/2,
-                                S.SCREEN_HEIGHT/12, "Back", self.gui.button_font)
+    def __init__(self, client, queue, clock, screen):
+        super().__init__(client, queue, clock, screen)    
+
+        self.__back_button = Button(S.SCREEN_WIDTH/4, S.SCREEN_HEIGHT*7/8, S.SCREEN_WIDTH/2,
+                                    S.SCREEN_HEIGHT/12, "Back", self._button_font)
   
         # Zmienne do przewijanego tekstu
-        self.text = read_text_from_file(S.HOW_TO_FILE)
-        self.text_area_width = S.SCREEN_WIDTH*4/5
-        self.text_area_height = S.SCREEN_HEIGHT*9/15
-        self.text_padding = 10
-        self.line_spacing = 5
-        self.scroll = 0
-        self.button_scroll_speed = 5
-        self.mouse_scroll_speed = self.button_scroll_speed * 10
-        self.text_rect = pg.Rect((S.SCREEN_WIDTH - self.text_area_width) // 2,
-                                  (S.SCREEN_HEIGHT - self.text_area_height) // 2,
-                                    self.text_area_width, self.text_area_height)
+        self.__text = read_text_from_file(S.HOW_TO_FILE)
+        text_area_width = S.SCREEN_WIDTH*4/5
+        text_area_height = S.SCREEN_HEIGHT*9/15
+        self.__text_padding = 10
+        self.__line_spacing = 5
+        self.__scroll = 0
+        self.__button_scroll_speed = 5
+        self.__mouse_scroll_speed = self.__button_scroll_speed * 10
+        self.__text_rect = pg.Rect((S.SCREEN_WIDTH - text_area_width) // 2,
+                                  (S.SCREEN_HEIGHT - text_area_height) // 2,
+                                    text_area_width, text_area_height)
 
     def run(self):
         # Główna pętla menu
@@ -31,69 +32,69 @@ class HowToMenu(Menu):
                     self.close_program()
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        if self.back_button.rect.collidepoint(event.pos):
+                        if self.__back_button.check_click(event.pos):
                             return
                     elif event.button == 4:
-                        self.scroll -= self.mouse_scroll_speed
+                        self.__scroll -= self.__mouse_scroll_speed
                     elif event.button == 5:
-                        self.scroll += self.mouse_scroll_speed
+                        self.__scroll += self.__mouse_scroll_speed
             keys = pg.key.get_pressed()
             if keys[pg.K_UP]:
-                self.scroll -= self.button_scroll_speed
+                self.__scroll -= self.__button_scroll_speed
             elif keys[pg.K_DOWN]:
-                self.scroll += self.button_scroll_speed
+                self.__scroll += self.__button_scroll_speed
             
             self.draw()
             self.check_server()
 
     def draw(self):
-        self.reinitialize_menu() if self.reinitialize else None
-
-        screen = self.gui.screen
-        clock = self.gui.clock
-        text_font = self.gui.text_font
-        title_font = self.gui.title_font
-
         # Rysowanie menu
-        screen.fill(S.BG_COLOR)
+        self._screen.fill(S.BG_COLOR)
 
         # Rysowanie tytułu
-        draw_text(screen, "How to play", S.FONT_COLOR, S.SCREEN_WIDTH/2, S.SCREEN_HEIGHT/10, title_font, True)
+        draw_text(self._screen, "How to play", S.FONT_COLOR, S.SCREEN_WIDTH/2,
+                  S.SCREEN_HEIGHT/10, self._title_font, True)
         
         # Rysowanie przycisków
-        self.back_button.draw(screen)
+        self.__back_button.draw(self._screen)
 
         # Rysowanie tekstu how to play
-        if self.scroll < 0:
-            self.scroll = 0
+        if self.__scroll < 0:
+            self.__scroll = 0
 
-        pg.draw.rect(screen, S.WHITE, self.text_rect, 2)
-        render_text_scrolled(screen, text_font, self.text, self.scroll, S.FONT_COLOR, self.line_spacing, self.text_rect, self.text_padding)
+        pg.draw.rect(self._screen, S.WHITE, self.__text_rect, 2)
+        render_text_scrolled(self._screen, self._text_font, self.__text, self.__scroll,
+                             S.FONT_COLOR, self.__line_spacing, self.__text_rect, self.__text_padding)
 
         # Odświeżenie ekranu
         pg.display.flip()
-        clock.tick(S.FPS)
+        self._clock.tick(S.FPS)
 
         # Sprawdzenie najechania myszką
         mouse_pos = pg.mouse.get_pos()
-        self.back_button.check_hover(mouse_pos)
+        self.__back_button.check_hover(mouse_pos)
 
 
     def reinitialize_menu(self):
-        self.back_button = Button(S.SCREEN_WIDTH/4, S.SCREEN_HEIGHT*7/8, S.SCREEN_WIDTH/2,
-                                S.SCREEN_HEIGHT/12, "Back", self.gui.button_font)
+        self.__back_button = Button(S.SCREEN_WIDTH/4, S.SCREEN_HEIGHT*7/8, S.SCREEN_WIDTH/2,
+                                    S.SCREEN_HEIGHT/12, "Back", self._button_font)
+  
         # Zmienne do przewijanego tekstu
-        self.text_area_width = S.SCREEN_WIDTH*4/5
-        self.text_area_height = S.SCREEN_HEIGHT*9/15
-        self.text_rect = pg.Rect((S.SCREEN_WIDTH - self.text_area_width) // 2,
-                                  (S.SCREEN_HEIGHT - self.text_area_height) // 2,
-                                    self.text_area_width, self.text_area_height)
-
-        self.reinitialize = False
+        self.__text = read_text_from_file(S.HOW_TO_FILE)
+        text_area_width = S.SCREEN_WIDTH*4/5
+        text_area_height = S.SCREEN_HEIGHT*9/15
+        self.__text_padding = 10
+        self.__line_spacing = 5
+        self.__scroll = 0
+        self.__button_scroll_speed = 5
+        self.__mouse_scroll_speed = self.__button_scroll_speed * 10
+        self.__text_rect = pg.Rect((S.SCREEN_WIDTH - text_area_width) // 2,
+                                  (S.SCREEN_HEIGHT - text_area_height) // 2,
+                                    text_area_width, text_area_height)
 
     def check_server(self):
-        while not self.gui.message_queue.empty():
-            message = self.gui.message_queue.get_nowait()
+        while not self._message_queue.empty():
+            message = self._message_queue.get_nowait()
             print(f"Unhandled message \"{message}\"") if S.DEBUG else None
             
     def close_program(self):
