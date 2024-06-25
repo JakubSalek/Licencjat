@@ -13,7 +13,6 @@ class TableMenu(Menu):
         self.__table = table
         self.__owner = owner
         self.__table_alive = True
-        self.__buttons = []
         self.__refresh_players = True
         self.__player_sprites = []
 
@@ -25,11 +24,11 @@ class TableMenu(Menu):
                                         buttons_height, "Delete Table", self._button_font)
             self.__start_button = Button(S.SCREEN_WIDTH*7/12, S.SCREEN_HEIGHT*10/12, buttons_width,
                                         buttons_height, "Start Game", self._button_font)
-            self.__buttons = [self.__start_button, self.__delete_button]
+            self._buttons = [self.__start_button, self.__delete_button]
         else:
             self.__leave_button = Button(S.SCREEN_WIDTH*4/12, S.SCREEN_HEIGHT*10/12, buttons_width,
                                         buttons_height, "Leave", self._button_font)
-            self.__buttons = [self.__leave_button]
+            self._buttons = [self.__leave_button]
 
         self.__rect_width = S.SCREEN_WIDTH*0.9
         self.__rect_height = S.SCREEN_HEIGHT*0.65
@@ -74,11 +73,22 @@ class TableMenu(Menu):
                    S.SCREEN_HEIGHT*0.1, self._text_font, True)
         
         # Rysowanie przycisków
-        for button in self.__buttons:
+        for button in self._buttons:
             button.draw(self._screen)
 
-        pg.draw.rect(self._screen, S.WHITE, self.__players_rect, 2)
+        self.__draw_players_info()
 
+        # Odświeżenie ekranu
+        pg.display.flip()
+        self._clock.tick(S.FPS)
+
+        # Sprawdzenie najechania myszką
+        mouse_pos = pg.mouse.get_pos()
+        for button in self._buttons:
+            button.check_hover(mouse_pos)
+
+    def __draw_players_info(self):
+        pg.draw.rect(self._screen, S.WHITE, self.__players_rect, 2)
         if self.__refresh_players:
             self.__player_sprites = []
             for i, player in enumerate(self.__table.get_players()):
@@ -99,15 +109,6 @@ class TableMenu(Menu):
         for sprite in self.__player_sprites:
             sprite.draw()
             self._screen.blit(sprite.get_surface(), sprite.get_rect())
-
-        # Odświeżenie ekranu
-        pg.display.flip()
-        self._clock.tick(S.FPS)
-
-        # Sprawdzenie najechania myszką
-        mouse_pos = pg.mouse.get_pos()
-        for button in self.__buttons:
-            button.check_hover(mouse_pos)
 
     def check_server(self):
         while not self._message_queue.empty():

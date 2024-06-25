@@ -57,7 +57,7 @@ class ChooseTableMenu(Menu):
                                 if sprite.check_click(event.pos):
                                     self._client.join_table(sprite.get_table())
                                     TableMenu(self._client, self._message_queue, self._clock, self._screen, sprite.get_table(), False)
-                                    self.clear_and_ask()
+                                    self.__clear_and_ask()
                     elif event.button == 4:
                         self.__scroll -= self.__mouse_scroll_speed if self.__scroll > 0 else 0
                         self.__refresh_tables = True
@@ -78,24 +78,8 @@ class ChooseTableMenu(Menu):
     def draw(self):
         # Rysowanie menu
         self._screen.fill(S.BLACK)
-
-        # Rysowanie stolików
-        pg.draw.rect(self._screen, S.WHITE, self.__tables_rect, 2)
  
-        if self.__refresh_tables:
-            self.__sprite_items = []
-            for i, table in enumerate(self.__tables):
-                table_rect = pg.Rect(self.__tables_rect.left, self.__tables_rect.top + i * self.__te_height - self.__scroll,
-                                    self.__rect_width, self.__te_height)
-                if self.__tables_rect.contains(table_rect):
-                    table_sprite = TableBanerItem(table, self._text_font, self.__rect_width, self.__te_height)
-                    table_sprite.set_rect(table_rect)
-                    self.__sprite_items.append(table_sprite)
-            self.__refresh_tables = False
-
-        for sprite in self.__sprite_items:
-            sprite.draw()
-            self._screen.blit(sprite.get_surface(), sprite.get_rect())
+        self.__draw_tables_list()
 
         # Rysowanie przycisków
         self.__back_button.draw(self._screen)
@@ -112,6 +96,23 @@ class ChooseTableMenu(Menu):
         for sprite in self.__sprite_items:
             sprite.check_hover(mouse_pos)
 
+    def __draw_tables_list(self):
+        # Rysowanie stolików
+        pg.draw.rect(self._screen, S.WHITE, self.__tables_rect, 2)
+        if self.__refresh_tables:
+            self.__sprite_items = []
+            for i, table in enumerate(self.__tables):
+                table_rect = pg.Rect(self.__tables_rect.left, self.__tables_rect.top + i * self.__te_height - self.__scroll,
+                                    self.__rect_width, self.__te_height)
+                if self.__tables_rect.contains(table_rect):
+                    table_sprite = TableBanerItem(table, self._text_font, self.__rect_width, self.__te_height)
+                    table_sprite.set_rect(table_rect)
+                    self.__sprite_items.append(table_sprite)
+            self.__refresh_tables = False
+
+        for sprite in self.__sprite_items:
+            sprite.draw()
+            self._screen.blit(sprite.get_surface(), sprite.get_rect())
 
     def reinitialize_menu(self):
         # Zmienne do przycisków
@@ -157,7 +158,7 @@ class ChooseTableMenu(Menu):
                 my_table = Table(id, name, 1, False)
                 my_table.add_player(Player(self._client.get_id(), self._client.get_nickname(), S.PLAYER_COLORS[0]))
                 TableMenu(self._client, self._message_queue, self._clock, self._screen, my_table, True)
-                self.clear_and_ask()
+                self.__clear_and_ask()
             elif message.startswith("DeleteTable"):
                 _, id = message.split(";")
                 for table in self.__tables:
@@ -175,7 +176,7 @@ class ChooseTableMenu(Menu):
             else:
                 print(f"Unhandled message \"{message}\"") if S.DEBUG else None
 
-    def clear_and_ask(self):
+    def __clear_and_ask(self):
         self.__tables = []
         self.__refresh_tables = True
         self._client.send_menu("ChooseTableMenu")

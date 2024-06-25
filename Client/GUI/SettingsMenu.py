@@ -28,7 +28,7 @@ class SettingsMenu(Menu):
                                         self.__arrow_height, ">", self._button_font)
         self.__fps_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*10/20, arrow_width,
                                         self.__arrow_height, "<", self._button_font)
-        self.__buttons = [self.__back_button, self.__save_button, self.__fps_left_button,
+        self._buttons = [self.__back_button, self.__save_button, self.__fps_left_button,
                           self.__fps_right_button, self.__resolution_left_button, self.__resolution_right_button]
 
         # Checkbox
@@ -95,7 +95,7 @@ class SettingsMenu(Menu):
                   S.SCREEN_HEIGHT*10/20+self.__arrow_height/2, self._text_font, True)
 
         # Rysowanie przycisków
-        for button in self.__buttons:
+        for button in self._buttons:
             button.draw(self._screen)
 
         self.__fullscreen_checkbox.draw()
@@ -106,7 +106,7 @@ class SettingsMenu(Menu):
 
         # Sprawdzenie najechania myszką
         mouse_pos = pg.mouse.get_pos()
-        for button in self.__buttons:
+        for button in self._buttons:
             button.check_hover(mouse_pos)
 
     def reinitialize_menu(self):
@@ -129,7 +129,7 @@ class SettingsMenu(Menu):
                                         self.__arrow_height, ">", self._button_font)
         self.__fps_left_button = Button(S.SCREEN_WIDTH*10/20, S.SCREEN_HEIGHT*10/20, arrow_width,
                                         self.__arrow_height, "<", self._button_font)
-        self.__buttons = [self.__back_button, self.__save_button, self.__fps_left_button,
+        self._buttons = [self.__back_button, self.__save_button, self.__fps_left_button,
                           self.__fps_right_button, self.__resolution_left_button, self.__resolution_right_button]
 
         # Checkbox

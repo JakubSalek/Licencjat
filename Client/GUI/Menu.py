@@ -16,6 +16,8 @@ class Menu:
         self._client = client
         self._message_queue = queue
         
+        self._buttons = []
+        
     def run(self):
         pass
 
@@ -23,7 +25,6 @@ class Menu:
         pass
 
     def reinitialize_menu(self):
-        self.__xs_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.02))
         self._text_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.03))
         self._ibox_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.02))
         self._title_font = pg.font.Font(S.FONT, int(S.SCREEN_WIDTH*0.1))

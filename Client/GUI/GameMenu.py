@@ -21,7 +21,6 @@ class GameMenu(Menu):
         self.__game_finished = False
         self.__given_rewards = False
         self.__current_card = Card(["NONE", "Error", "Something went wrong!"])
-        self.__buttons = []
         self.__sorted_players = []
 
         # Players Rect
@@ -52,7 +51,7 @@ class GameMenu(Menu):
         self.__move_button = Button((S.TILES_ROW - 1) * self.__tile_width + self.__tile_width * 0.1,
                                     (S.TILES_COL - 1) * self.__tile_height + self.__tile_height * 0.4,
                                     self.__tile_width * 0.8, self.__tile_height * 0.5, "Move", self._text_font)
-        self.__buttons.append(self.__move_button)
+        self._buttons.append(self.__move_button)
 
         # Scroll planszy
         self.__board_scroll = 0
@@ -124,16 +123,16 @@ class GameMenu(Menu):
                                 self.__confirm_button.set_active(False)
                             if self.__player_one_button.check_click(event.pos):
                                 self._client.attack_player(self.__table, self.__table.get_player_id(0), self.__current_card)
-                                self.attack_player()
+                                self.__attack_player()
                             if self.__player_two_button.check_click(event.pos):
                                 self._client.attack_player(self.__table, self.__table.get_player_id(1), self.__current_card)
-                                self.attack_player()
+                                self.__attack_player()
                             if self.__player_three_button.check_click(event.pos):
                                 self._client.attack_player(self.__table, self.__table.get_player_id(2), self.__current_card)
-                                self.attack_player()
+                                self.__attack_player()
                             if self.__player_four_button.check_click(event.pos):
                                 self._client.attack_player(self.__table, self.__table.get_player_id(3), self.__current_card)
-                                self.attack_player()
+                                self.__attack_player()
                         if self.__game_finished and self.__end_game_button.check_click(event.pos):
                             self._client.delete_table(self.__table)
                     elif event.button == 4:
@@ -161,12 +160,12 @@ class GameMenu(Menu):
             self.draw()
             self.check_server()
 
-    def attack_player(self):
+    def __attack_player(self):
         self.__attacked_players += 1
         if self.__attacked_players >= self.__current_card.get_player_count():
             self._client.end_turn()
 
-    def draw_move(self):
+    def __draw_move(self):
         # Rysowanie karty
         pg.draw.rect(self._screen, S.BLACK, self.__card_rect)
         pg.draw.rect(self._screen, S.WHITE, self.__card_rect, 2)
@@ -213,7 +212,7 @@ class GameMenu(Menu):
                            self.__choice_rect.top + self.__mrect_height*0.15, self._text_font, True)
 
 
-    def draw_finish_screen(self):
+    def __draw_finish_screen(self):
         pg.draw.rect(self._screen, S.BLACK, self.__finish_rect)
         pg.draw.rect(self._screen, S.WHITE, self.__finish_rect, 2)
         for i, player in enumerate(self.__sorted_players):
@@ -228,6 +227,42 @@ class GameMenu(Menu):
         # Rysowanie menu
         self._screen.fill(S.BG_COLOR)
 
+
+        self.__draw_game_map()
+        self.__draw_players_info()
+
+        if self.__game_finished:
+            if not self.__given_rewards:
+                for player in self.__table.get_players():
+                    player.change_gold(player.get_progress())
+                    self.__given_rewards = True
+                    self.__sorted_players = sorted(self.__table.get_players(),
+                                                key=lambda player: (player.get_gold(), player.get_progress()), reverse=True)
+
+            self.__show_move = False
+            for button in self._buttons:
+                button.set_active(False)
+            self.__end_game_button.set_active(True)
+            self.__draw_finish_screen()
+            
+
+        if self.__show_move:
+            self.__draw_move()
+
+        # Rysowanie przycisków
+        for button in self._buttons:
+            button.draw(self._screen)
+
+        # Odświeżenie ekranu
+        pg.display.flip()
+        self._clock.tick(S.FPS)
+
+        # Sprawdzenie najechania myszką
+        mouse_pos = pg.mouse.get_pos()
+        for button in self._buttons:
+            button.check_hover(mouse_pos)
+
+    def __draw_game_map(self):
         # Wyrysowanie tile na górze
         for i in range(S.TILE_COUNT):
             tile_rect = pg.Rect(self.__tiles_rect.left + (i % S.TILES_ROW) * self.__tile_width,
@@ -244,8 +279,8 @@ class GameMenu(Menu):
                 tile_sprite.draw(players)
                 self._screen.blit(tile_sprite.get_surface(), tile_sprite.get_rect().topleft)
                 pg.draw.rect(self._screen, S.TILE_BORDER_COLOR, tile_sprite.get_rect(), 2)
-        
 
+    def __draw_players_info(self):
         # Wyrysowanie graczy na dole ekranu
         pg.draw.rect(self._screen, S.WHITE, self.__players_rect, 2)
         for i, player in enumerate(self.__table.get_players()):
@@ -256,37 +291,6 @@ class GameMenu(Menu):
             player_sprite.draw()
             self._screen.blit(player_sprite.get_surface(), player_sprite.get_rect())
             pg.draw.rect(self._screen, S.WHITE, player_sprite.get_rect(), 2)
-
-        if self.__game_finished:
-            if not self.__given_rewards:
-                for player in self.__table.get_players():
-                    player.change_gold(player.get_progress())
-                    self.__given_rewards = True
-                    self.__sorted_players = sorted(self.__table.get_players(),
-                                                key=lambda player: (player.get_gold(), player.get_progress()), reverse=True)
-
-            self.__show_move = False
-            for button in self.__buttons:
-                button.set_active(False)
-            self.__end_game_button.set_active(True)
-            self.draw_finish_screen()
-            
-
-        if self.__show_move:
-            self.draw_move()
-
-        # Rysowanie przycisków
-        for button in self.__buttons:
-            button.draw(self._screen)
-
-        # Odświeżenie ekranu
-        pg.display.flip()
-        self._clock.tick(S.FPS)
-
-        # Sprawdzenie najechania myszką
-        mouse_pos = pg.mouse.get_pos()
-        for button in self.__buttons:
-            button.check_hover(mouse_pos)
 
     def check_server(self):
         while not self._message_queue.empty():

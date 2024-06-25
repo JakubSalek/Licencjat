@@ -11,14 +11,14 @@ class Client:
     def get_client_socket(self):
         return self.__client_socket
     
-    def set_nickname(self, nickname):
-        self.__nickname = nickname
-
     def get_nickname(self):
         return self.__nickname
     
-    def set_current_menu(self, current_menu):
-        self.__current_menu = current_menu
+    def set_nickname(self, nickname):
+        self.__nickname = nickname
 
     def get_current_menu(self):
         return self.__current_menu
+    
+    def set_current_menu(self, current_menu):
+        self.__current_menu = current_menu
