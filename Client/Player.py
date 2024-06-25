@@ -31,3 +31,18 @@ class Player:
     
     def get_gold(self):
         return self.__gold
+    
+    def get_id(self):
+        return self.__id
+    
+    def get_nickname(self):
+        return self.__nickname
+    
+    def get_color(self):
+        return self.__color
+    
+    def get_found(self):
+        return self.__found
+    
+    def set_found(self, found):
+        self.__found = found

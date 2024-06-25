@@ -19,10 +19,25 @@ class Table:
         self.__player_count = player_count
     
     def get_players(self):
-        return self.__players()
+        return self.__players
     
     def get_started(self):
         return self.__started
     
     def set_started(self, started):
         self.__started = started
+
+    def clear_players(self):
+        self.__players.clear()
+        self.__player_count = "0"
+
+    def add_player(self, player):
+        self.__players.append(player)
+        self.__player_count = str(len(self.__players))
+
+    def remove_player(self, player):
+        self.__players.remove(player)
+        self.__player_count = str(len(self.__players))
+    
+    def get_player_id(self, index):
+        return self.__players[index].get_id()

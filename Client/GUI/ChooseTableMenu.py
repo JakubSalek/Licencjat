@@ -1,6 +1,6 @@
 from GUI.UIComponents.TableBanerItem import TableBanerItem
 from GUI.UIComponents.Button import Button
-# from GUI.TableMenu import TableMenu
+from GUI.TableMenu import TableMenu
 from GUI.Menu import Menu
 from Table import Table
 from Player import Player
@@ -56,7 +56,7 @@ class ChooseTableMenu(Menu):
                             for sprite in self.__sprite_items:
                                 if sprite.check_click(event.pos):
                                     self._client.join_table(sprite.get_table())
-                                    # TableMenu(self.__gui, sprite.table, False) # TODO
+                                    TableMenu(self._client, self._message_queue, self._clock, self._screen, sprite.get_table(), False)
                                     self.clear_and_ask()
                     elif event.button == 4:
                         self.__scroll -= self.__mouse_scroll_speed if self.__scroll > 0 else 0
@@ -155,8 +155,8 @@ class ChooseTableMenu(Menu):
             elif message.startswith("CreateTable"):
                 _, id, name = message.split(";")
                 my_table = Table(id, name, 1, False)
-                my_table.__players = [Player(self._client.get_id(), self._client.get_nickname(), S.PLAYER_COLORS[0])]
-                # TableMenu(self.__gui, my_table, True) # TODO
+                my_table.add_player(Player(self._client.get_id(), self._client.get_nickname(), S.PLAYER_COLORS[0]))
+                TableMenu(self._client, self._message_queue, self._clock, self._screen, my_table, True)
                 self.clear_and_ask()
             elif message.startswith("DeleteTable"):
                 _, id = message.split(";")
