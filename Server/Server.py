@@ -35,8 +35,8 @@ class Server:
         self.__print_coming_message(response, c)
         c.set_nickname(response)
         self.__send_message(c.get_id(), c)
-
-        while True:
+        client_online = True
+        while client_online:
             response: str = c.get_client_socket().recv(1024).decode()
             messages = response.split("$")
             for message in messages:
@@ -45,7 +45,7 @@ class Server:
                 if message == "Disconnect":
                     self.__send_message("OKDISCONNECT", c)
                     self.__clients.remove(c)
-                    break
+                    client_online = False
 
                 elif message == "Tables":
                     self.__send_tables(c)
