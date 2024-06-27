@@ -4,7 +4,7 @@ import pygame as pg
 import SETTINGS as S
 import queue
 
-if __name__ == "__main__":
+def main():
     # Inicjalizacja kolejki wiadomości
     message_queue = queue.Queue()
 
@@ -16,4 +16,7 @@ if __name__ == "__main__":
 
     # Inicjalizacja dwóch głównych wątków
     client = Client(message_queue)
-    menu = MainMenu(client, message_queue, clock, screen)
+    MainMenu(client, message_queue, clock, screen)
+
+if __name__ == "__main__":
+    main()
