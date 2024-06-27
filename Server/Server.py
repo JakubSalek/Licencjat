@@ -82,7 +82,9 @@ class Server:
     # Wyślij informację o wszystkich stolikach
     def __send_tables(self, c):
         for table in self.__tables:
-            message = f"Table;{table.get_id()};{table.get_name()};{len(table.get_players())};{1 if table.get_is_started() else 0}"
+            message = (f"Table;{table.get_id()};{table.get_name()};"
+                       f"{len(table.get_players())};"
+                       f"{1 if table.get_is_started() else 0}")
             self.__send_message(message, c)
     
     # Utwórz nowy stolik

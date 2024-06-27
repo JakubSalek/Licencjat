@@ -237,7 +237,11 @@ class GameMenu(Menu):
                     player.change_gold(player.get_progress())
                     self.__given_rewards = True
                     self.__sorted_players = sorted(self.__table.get_players(),
-                                                key=lambda player: (player.get_gold(), player.get_progress()), reverse=True)
+                                                    key=lambda player: (
+                                                    player.get_gold(),
+                                                    player.get_progress()
+                                                    ),
+                                                    reverse=True)
 
             self.__show_move = False
             for button in self._buttons:
